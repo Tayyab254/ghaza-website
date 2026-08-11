@@ -3,12 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghaza Laptops and Computers | Sales, Upgrades & Repair Services</title>
-    
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Ghaza Laptops and Computers in G-9 Markaz Islamabad offers imported Dell, HP, Lenovo laptops, original chargers, NVMe SSD upgrades, and motherboard hardware repairs.">
-    <meta name="keywords" content="laptop repair Islamabad, imported laptops Pakistan, Dell charger, HP charger, laptop screen replacement, G9 Markaz computer shop">
-
+    <title>Ghaza Laptops & Computers | G-9 Markaz Islamabad</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -19,165 +14,120 @@
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
             --border: #334155;
+            --required: #ef4444;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background-color: var(--dark-bg); color: var(--text-light); line-height: 1.6; }
 
-        /* Navigation Header */
-        header {
-            background-color: #020617;
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            position: sticky; top: 0; z-index: 100;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .logo { font-size: 1.4rem; font-weight: bold; color: var(--primary); text-decoration: none; }
-        .logo span { color: var(--secondary); }
+        /* Header Navigation */
+        header { background: #020617; border-bottom: 1px solid var(--border); padding: 1rem 2rem; sticky: top; position: sticky; top: 0; z-index: 100; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: bold; color: #60a5fa; text-decoration: none; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
+        .nav-links a { color: var(--text-light); text-decoration: none; font-weight: 500; transition: 0.2s; }
+        .nav-links a:hover { color: #60a5fa; }
+        .req-star { color: var(--required); font-weight: bold; }
 
-        nav a {
-            color: var(--text-light); text-decoration: none;
-            margin-left: 1.5rem; font-weight: 500; transition: 0.3s;
-        }
-        nav a:hover { color: var(--primary); }
-        .btn-account {
-            background: var(--primary); color: white; padding: 0.5rem 1rem;
-            border-radius: 6px; text-decoration: none; font-weight: 600;
-        }
-
-        /* Hero & Video Section */
-        .hero {
-            padding: 3rem 1.5rem; text-align: center;
-            background: linear-gradient(180deg, #020617 0%, var(--dark-bg) 100%);
-        }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 0.8rem; color: var(--text-light); }
-        .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 2rem auto; }
-
-        .video-container {
-max-width: 380px;      
-    max-height: 480px;    
-    margin: 0 auto 2.5rem auto;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 2px solid var(--border);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    background: #000;
-}
-
-.video-container video {
-    width: 100%;
-    height: 100%;
-    max-height: 480px;
-    object-fit: contain;   /* Displays the full video frame neatly without cropping */
-    display: block;
-        }
-
-        .hero-btns { display: flex; gap: 1rem; justify-content: center; }
-
-        .btn {
-            padding: 0.8rem 1.8rem; border-radius: 6px;
-            font-size: 1rem; font-weight: bold; text-decoration: none; display: inline-block;
-        }
-        .btn-main { background: var(--primary); color: white; }
-        .btn-main:hover { background: var(--primary-dark); }
-        .btn-outline { border: 2px solid var(--primary); color: var(--primary); }
-        .btn-outline:hover { background: var(--primary); color: white; }
-
-        /* Services Grid */
-        .services { max-width: 1200px; margin: 4rem auto; padding: 0 1.5rem; }
-        .section-title { text-align: center; font-size: 2rem; margin-bottom: 2.5rem; color: var(--primary); }
+        /* Hero Section */
+        .hero { padding: 4rem 2rem; text-align: center; max-width: 900px; margin: 0 auto; }
+        .hero h1 { font-size: 2.8rem; margin-bottom: 1rem; color: #60a5fa; }
+        .hero p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem; }
+        .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
         
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .btn { padding: 0.8rem 1.6rem; border-radius: 8px; font-weight: bold; text-decoration: none; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary { background: var(--card-bg); color: var(--text-light); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--primary); }
+
+        /* Modal Overlay for Track Order */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--border); padding: 2rem; border-radius: 12px; width: 100%; max-width: 450px; }
+        .modal-box h2 { margin-bottom: 0.5rem; color: #60a5fa; }
         
-        .card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            padding: 1.8rem; border-radius: 10px; text-align: center;
-            transition: transform 0.3s;
-        }
-        .card:hover { transform: translateY(-5px); }
-        .card h3 { font-size: 1.3rem; margin-bottom: 0.8rem; color: var(--secondary); }
-        .card p { color: var(--text-muted); font-size: 0.95rem; }
-
-        /* Floating WhatsApp Button */
-        .whatsapp-float {
-            position: fixed; bottom: 20px; right: 20px;
-            background-color: #25d366; color: white;
-            padding: 0.8rem 1.2rem; border-radius: 50px;
-            text-decoration: none; font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 0.5rem;
-        }
-
-        /* Footer */
-        footer {
-            background-color: #020617; border-top: 1px solid var(--border);
-            text-align: center; padding: 2rem; color: var(--text-muted); margin-top: 4rem;
-        }
+        /* Form Inputs */
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; color: #cbd5e1; }
+        input { width: 100%; padding: 0.75rem; border-radius: 6px; background: #020617; border: 1px solid var(--border); color: white; font-size: 0.95rem; }
+        input:focus { outline: none; border-color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <!-- Navigation Header -->
     <header>
-        <a href="index.html" class="logo">Ghaza <span>Laptops & Computers</span></a>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop Stock</a>
-            <a href="repair.html">Repair Services</a>
-            <a href="account.html" class="btn-account">My Account / Login</a>
-        </nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Ghaza Laptops & Computers</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop Inventory</a></li>
+                <li><a href="#" onclick="openTrackModal()">📦 Track Order</a></li>
+                <li><a href="account.html">Account</a></li>
+            </ul>
+        </div>
     </header>
 
-    <!-- Hero & Featured Video Section -->
-    <section class="hero">
-        <h1>Welcome to Ghaza Laptops and Computers</h1>
-        <p>Your trusted shop for imported business laptops, original chargers, power cables, NVMe/RAM upgrades, and diagnostic hardware repairs.</p>
-        
-        <!-- Video Player -->
-        <div class="video-container">
-            <video controls preload="metadata">
-                <source src="images/intro-video.mp4" type="video/mp4">
-                Your browser does not support HTML5 video.
-            </video>
+    <main>
+        <section class="hero">
+            <h1>Quality Laptops & Desktop Computers</h1>
+            <p>Your trusted tech partner in G-9 Markaz, Islamabad. Browse our verified inventory or track your existing order in real time.</p>
+            <div class="btn-group">
+                <a href="shop.html" class="btn btn-primary">Browse Shop Inventory</a>
+                <button onclick="openTrackModal()" class="btn btn-secondary">📦 Track Your Order</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Track Order Modal -->
+    <div id="trackModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2>📦 Track Order Status</h2>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.2rem;">
+                Enter your Order ID or WhatsApp Phone Number <span class="req-star">*</span>
+            </p>
+            <form id="trackOrderForm">
+                <div class="form-group">
+                    <label for="trackInput">Order ID / WhatsApp Number <span class="req-star">*</span></label>
+                    <input type="text" id="trackInput" placeholder="e.g. GHZ-1042 or 03350007575" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Lookup Status</button>
+                <button type="button" onclick="closeTrackModal()" class="btn btn-secondary" style="width: 100%; justify-content: center; margin-top: 0.5rem;">Close</button>
+            </form>
+            <div id="trackResult" style="margin-top: 1rem; font-size: 0.9rem;"></div>
         </div>
+    </div>
 
-        <div class="hero-btns">
-            <a href="shop.html" class="btn btn-main">Browse Laptop Stock</a>
-            <a href="repair.html" class="btn btn-outline">Book a Repair</a>
-        </div>
-    </section>
+    <script>
+        function openTrackModal() {
+            document.getElementById('trackModal').style.display = 'flex';
+        }
+        function closeTrackModal() {
+            document.getElementById('trackModal').style.display = 'none';
+            document.getElementById('trackResult').innerHTML = '';
+        }
 
-    <!-- Services Overview -->
-    <section class="services">
-        <h2 class="section-title">Our Products & Services</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>💻 Tested Laptops</h3>
-                <p>Imported Dell, HP, Lenovo & Apple laptops benchmarked for work and daily performance.</p>
-            </div>
-            <div class="card">
-                <h3>🔌 Chargers & Cables</h3>
-                <p>Original HP blue-pin, Dell smart-pin, Type-C fast chargers, and heavy-duty desktop power cables.</p>
-            </div>
-            <div class="card">
-                <h3>🛠️ Hardware Repairs</h3>
-                <p>Diagnostic troubleshooting for dead laptops, power faults, motherboard repairs, and screen replacements.</p>
-            </div>
-            <div class="card">
-                <h3>⚡ Storage & Speed Upgrades</h3>
-                <p>Instant performance boosts with high-speed NVMe M.2 SSDs and DDR4/DDR5 memory sticks.</p>
-            </div>
-        </div>
-    </section>
+        document.getElementById('trackOrderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var query = document.getElementById('trackInput').value.trim().toLowerCase();
+            var orders = JSON.parse(localStorage.getItem('ghaza_orders') || '[]');
+            
+            var match = orders.find(function(o) {
+                return (o.orderId && o.orderId.toLowerCase() === query) || (o.phone && o.phone.includes(query));
+            });
 
-    <!-- WhatsApp Floating Button -->
-    <a href="https://wa.me/923350007575" class="whatsapp-float" target="_blank">
-        💬 Chat on WhatsApp
-    </a>
-
-    <!-- Footer -->
-    <footer>
-        <p>© 2026 Ghaza Laptops and Computers. All rights reserved.</p>
-    </footer>
-
+            var resultDiv = document.getElementById('trackResult');
+            if (match) {
+                resultDiv.innerHTML = `
+                    <div style="background: #020617; padding: 1rem; border-radius: 8px; border: 1px solid var(--secondary);">
+                        <p><strong>Order ID:</strong> ${match.orderId || 'N/A'}</p>
+                        <p><strong>Product:</strong> ${match.product}</p>
+                        <p><strong>Status:</strong> <span style="color: var(--secondary); font-weight: bold;">${match.status || 'Processing'}</span></p>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `<p style="color: var(--required);">No order found matching "${query}". Please verify your details.</p>`;
+            }
+        });
+    </script>
 </body>
 </html>
