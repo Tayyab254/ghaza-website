@@ -3,316 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop & Repair Services | Ghaza Laptops and Computers</title>
+    <title>Shop Inventory | Ghaza Laptops & Computers</title>
     <style>
         :root {
             --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --whatsapp: #25D366;
-            --whatsapp-hover: #128C7E;
+            --primary-dark: #1d4ed8;
             --secondary: #10b981;
-            --dark-bg: #0b1120;
+            --dark-bg: #0f172a;
             --card-bg: #1e293b;
-            --border: #334155;
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
+            --border: #334155;
+            --required: #ef4444;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--dark-bg); color: var(--text-light); min-height: 100vh; padding-bottom: 3rem; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--dark-bg); color: var(--text-light); }
 
-        /* Header Navigation */
-        header { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
-        header h1 { font-size: 1.5rem; color: #3b82f6; }
-        nav a { color: var(--text-light); text-decoration: none; margin-left: 1.2rem; font-weight: 500; }
-        nav a:hover { color: var(--primary); }
+        header { background: #020617; border-bottom: 1px solid var(--border); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: bold; color: #60a5fa; text-decoration: none; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
+        .nav-links a { color: var(--text-light); text-decoration: none; font-weight: 500; }
+        .nav-links a:hover { color: #60a5fa; }
+        .req-star { color: var(--required); font-weight: bold; }
 
         .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .shop-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+        
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+        .product-body { padding: 1.2rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-title { font-size: 1.1rem; color: #f8fafc; margin-bottom: 0.5rem; }
+        .product-price { font-size: 1.2rem; color: var(--secondary); font-weight: bold; margin-bottom: 1rem; }
+        
+        .btn { padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: bold; text-decoration: none; cursor: pointer; border: none; text-align: center; }
+        .btn-primary { background: var(--primary); color: white; }
 
-        .section-title { font-size: 1.8rem; margin-bottom: 0.5rem; color: #60a5fa; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
-        .section-desc { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.95rem; }
-
-        /* Grids */
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
-
-        /* Product & Service Cards */
-        .card {
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: 12px; padding: 1.2rem; display: flex; flex-direction: column;
-            justify-content: space-between; transition: transform 0.2s ease, border-color 0.2s ease;
-            overflow: hidden;
-        }
-        .card:hover { transform: translateY(-3px); border-color: var(--primary); }
-        .card h3 { font-size: 1.2rem; color: var(--text-light); margin-bottom: 0.5rem; }
-        .card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; line-height: 1.4; }
-        .price-tag { font-size: 1.2rem; font-weight: bold; color: var(--secondary); margin-bottom: 1rem; display: block; }
-
-        /* Product Image Gallery Styles */
-        .product-media { margin-bottom: 1rem; }
-        .main-img-box { width: 100%; height: 180px; background: #020617; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; }
-        .main-img-box img { width: 100%; height: 100%; object-fit: cover; }
-        .thumb-gallery { display: flex; gap: 0.4rem; overflow-x: auto; padding-bottom: 0.2rem; }
-        .thumb-gallery img { width: 42px; height: 42px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
-        .thumb-gallery img:hover { border-color: var(--primary); }
-
-        /* Form Controls */
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; color: #cbd5e1; }
-        input, select, textarea {
-            width: 100%; padding: 0.8rem; border-radius: 6px;
-            background: #020617; border: 1px solid var(--border);
-            color: var(--text-light); font-size: 0.95rem; outline: none;
-        }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary); }
-
-        .btn { padding: 0.7rem 1.2rem; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; background: var(--primary); color: white; width: 100%; text-align: center; text-decoration: none; display: inline-block; }
-        .btn:hover { background: var(--primary-hover); }
-
-        /* Button Layout Styles */
-        .button-group { display: flex; gap: 0.5rem; }
-        @media (max-width: 480px) { .button-group { flex-direction: column; } }
-
-        .btn-web { background-color: var(--primary); color: #ffffff; flex: 1; padding: 0.7rem 0.5rem; font-size: 0.85rem; }
-        .btn-web:hover { background-color: var(--primary-hover); }
-
-        .btn-whatsapp { background-color: var(--whatsapp); color: #000000; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex: 1; padding: 0.7rem 0.5rem; font-size: 0.85rem; }
-        .btn-whatsapp:hover { background-color: var(--whatsapp-hover); color: white; }
-
-        /* Repair Request Form Section */
-        .repair-booking-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; max-width: 650px; margin: 0 auto; }
+        /* Modal Overlay */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(2, 6, 23, 0.85); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--border); padding: 2rem; border-radius: 12px; width: 100%; max-width: 450px; }
+        
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        label { display: block; margin-bottom: 0.4rem; font-size: 0.88rem; color: #cbd5e1; }
+        input { width: 100%; padding: 0.75rem; border-radius: 6px; background: #020617; border: 1px solid var(--border); color: white; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Ghaza Laptops and Computers</h1>
-        <nav>
-            <a href="shop.html">Shop & Services</a>
-            <a href="account.html">Account</a>
-            <a href="admin.html">Admin Panel</a>
-        </nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Ghaza Laptops & Computers</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html" style="color: #60a5fa;">Shop Inventory</a></li>
+                <li><a href="#" onclick="openTrackModal()">📦 Track Order</a></li>
+                <li><a href="account.html">Account</a></li>
+            </ul>
+        </div>
     </header>
 
     <div class="container">
-        
-        <!-- SECTION 1: COMPUTER & LAPTOP INVENTORY -->
-        <h2 class="section-title">💻 Shop Inventory</h2>
-        <p class="section-desc">Browse products and place your order directly via Web or WhatsApp for instant delivery arrangement.</p>
-        <div id="productsContainer" class="grid-container">
-            <!-- Dynamically populated from Admin Stock -->
+        <div class="shop-header">
+            <div>
+                <h1>Shop Laptops & Computers</h1>
+                <p style="color: var(--text-muted);">Available stock in G-9 Markaz, Islamabad</p>
+            </div>
+            <button onclick="openTrackModal()" class="btn btn-primary" style="background: var(--card-bg); border: 1px solid var(--border);">📦 Track Existing Order</button>
         </div>
 
-        <!-- SECTION 2: REPAIR SERVICES -->
-        <h2 class="section-title">🔧 Professional Repair Services</h2>
-        <p class="section-desc">Hardware diagnostics, component repairs, OS reinstallation, and data recovery services.</p>
-        <div id="servicesContainer" class="grid-container">
-            <!-- Dynamically populated from Admin Repair Services -->
+        <div class="product-grid" id="productContainer">
+            <!-- Dynamic products loaded here -->
         </div>
+    </div>
 
-        <!-- SECTION 3: BOOK A REPAIR SERVICE -->
-        <div class="repair-booking-box">
-            <h2 style="font-size: 1.4rem; margin-bottom: 0.5rem; color: #60a5fa;">📋 Book a Repair Diagnostic</h2>
-            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Fill out the details below to schedule a service request with our workshop.</p>
-            
-            <form id="repairBookingForm">
+    <!-- Track Order Modal -->
+    <div id="trackModal" class="modal-overlay">
+        <div class="modal-box">
+            <h2 style="color: #60a5fa; margin-bottom: 0.5rem;">📦 Track Order Status</h2>
+            <form id="trackOrderForm">
                 <div class="form-group">
-                    <label for="custName">Your Full Name</label>
-                    <input type="text" id="custName" placeholder="e.g. Ali Ahmed" required>
+                    <label for="trackInput">Order ID / WhatsApp Phone <span class="req-star">*</span></label>
+                    <input type="text" id="trackInput" placeholder="e.g. GHZ-1042 or 03350007575" required>
                 </div>
-                <div class="form-group">
-                    <label for="custPhone">WhatsApp Phone Number</label>
-                    <input type="tel" id="custPhone" placeholder="e.g. +923003350007575" required>
-                </div>
-                <div class="form-group">
-                    <label for="deviceModel">Laptop / Computer Model</label>
-                    <input type="text" id="deviceModel" placeholder="e.g. HP EliteBook 840 G5" required>
-                </div>
-                <div class="form-group">
-                    <label for="repairServiceSelect">Select Required Service</label>
-                    <select id="repairServiceSelect" required>
-                        <option value="" disabled selected>-- Choose Service --</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="issueDetails">Describe the Issue</label>
-                    <textarea id="issueDetails" rows="3" placeholder="Provide details about the hardware or software problem..." required></textarea>
-                </div>
-                <button type="submit" class="btn">Submit Repair Request</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Search Order</button>
+                <button type="button" onclick="closeTrackModal()" class="btn" style="width: 100%; margin-top: 0.5rem; background: transparent; color: var(--text-muted);">Close</button>
             </form>
+            <div id="trackResult" style="margin-top: 1rem;"></div>
         </div>
-
     </div>
 
     <script>
-        // CONFIGURATION: Set your shop WhatsApp number here (include country code without + or spaces)
-        var shopWhatsAppNumber = "923350007575"; // Replace with your target WhatsApp number
-
-        // 1. Load Inventory Products added via Admin Panel
-        function loadShopProducts() {
+        function loadProducts() {
             var stock = JSON.parse(localStorage.getItem('ghaza_stock') || '[]');
-            var container = document.getElementById('productsContainer');
+            var container = document.getElementById('productContainer');
             container.innerHTML = '';
 
             if (stock.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted);">No products currently listed in inventory.</p>';
+                container.innerHTML = '<p style="color: var(--text-muted);">No products in stock currently. Check back soon!</p>';
                 return;
             }
 
-            stock.forEach(function(item, idx) {
-                var mainImgSrc = '';
-                var galleryHtml = '';
-
-                if (item.images && item.images.length > 0) {
-                    mainImgSrc = item.images[0];
-                    if (item.images.length > 1) {
-                        galleryHtml = '<div class="thumb-gallery">' + 
-                            item.images.map(function(src) {
-                                return `<img src="${src}" onclick="changeProductImage(${idx}, '${src}')">`;
-                            }).join('') + 
-                            '</div>';
-                    }
-                } else {
-                    mainImgSrc = 'https://via.placeholder.com/300x180/1e293b/f8fafc?text=No+Image+Available';
-                }
-
-                container.innerHTML += `
-                    <div class="card">
+            stock.forEach(function(item) {
+                var card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-body">
                         <div>
-                            <div class="product-media">
-                                <div class="main-img-box">
-                                    <img id="main-img-${idx}" src="${mainImgSrc}" alt="${item.title}">
-                                </div>
-                                ${galleryHtml}
-                            </div>
-                            <h3>${item.title}</h3>
-                            <p>${item.specs}</p>
+                            <h3 class="product-title">${item.title}</h3>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.8rem;">${item.specs}</p>
                         </div>
                         <div>
-                            <span class="price-tag">Rs. ${item.price}</span>
-                            <div class="button-group">
-                                <button class="btn btn-web" onclick="proceedToCheckout('${encodeURIComponent(item.title)}', '${item.price}', '${encodeURIComponent(item.specs)}')">
-                                    🌐 Buy via Web
-                                </button>
-                                <button class="btn btn-whatsapp" onclick="buyViaWhatsApp('${encodeURIComponent(item.title)}', '${item.price}', '${encodeURIComponent(item.specs)}')">
-                                    💬 Buy via WhatsApp
-                                </button>
-                            </div>
+                            <div class="product-price">Rs. ${item.price}</div>
+                            <a href="checkout.html?prodId=${item.id}" class="btn btn-primary" style="display:block;">Buy Now</a>
                         </div>
                     </div>
                 `;
+                container.appendChild(card);
             });
         }
 
-        // Helper function to switch main image preview when thumbnails are clicked
-        function changeProductImage(cardIndex, src) {
-            document.getElementById('main-img-' + cardIndex).src = src;
-        }
+        function openTrackModal() { document.getElementById('trackModal').style.display = 'flex'; }
+        function closeTrackModal() { document.getElementById('trackModal').style.display = 'none'; document.getElementById('trackResult').innerHTML = ''; }
 
-        // Web Checkout Redirect Trigger
-        function proceedToCheckout(title, price, specs) {
-            var item = {
-                title: decodeURIComponent(title),
-                price: price,
-                specs: decodeURIComponent(specs)
-            };
-            localStorage.setItem('ghaza_checkout_item', JSON.stringify(item));
-            window.location.href = 'checkout.html';
-        }
-
-        // WhatsApp Direct Purchase Trigger
-        function buyViaWhatsApp(title, price, specs) {
-            var decodedTitle = decodeURIComponent(title);
-            var decodedSpecs = decodeURIComponent(specs);
-
-            var message = `Hello *Ghaza Laptops and Computers*, I would like to order the following product:\n\n` +
-                          `*Product:* ${decodedTitle}\n` +
-                          `*Price:* Rs. ${price}\n` +
-                          `*Specs:* ${decodedSpecs}\n\n` +
-                          `Please confirm availability and sharing details for delivery/payment.`;
-
-            var whatsappUrl = `https://wa.me/${shopWhatsAppNumber}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // 2. Load Repair Services added via Admin Panel
-        function loadShopServices() {
-            var services = JSON.parse(localStorage.getItem('ghaza_offered_services') || '[]');
-            var servicesContainer = document.getElementById('servicesContainer');
-            var dropdown = document.getElementById('repairServiceSelect');
-
-            servicesContainer.innerHTML = '';
-
-            if (services.length === 0) {
-                services = [
-                    { title: "Laptop Hardware Diagnostic", cost: "Rs. 1,000", desc: "Complete diagnostic checkup for motherboard, RAM, and power logic issues." },
-                    { title: "Windows & OS Reinstallation", cost: "Rs. 1,500", desc: "Clean operating system installation, driver updates, and essential tools setup." },
-                    { title: "Data Recovery & Disk Backup", cost: "Rs. 3,000+", desc: "Raw sector data recovery and transfer from failing HDDs and SSDs." }
-                ];
-            }
-
-            services.forEach(function(s) {
-                servicesContainer.innerHTML += `
-                    <div class="card">
-                        <div>
-                            <h3>${s.title}</h3>
-                            <p>${s.desc}</p>
-                        </div>
-                        <div>
-                            <span class="price-tag">${s.cost}</span>
-                            <button class="btn btn-whatsapp" style="font-size:0.85rem;" onclick="inquireServiceWhatsApp('${encodeURIComponent(s.title)}', '${s.cost}')">
-                                💬 Book via WhatsApp
-                            </button>
-                        </div>
-                    </div>
-                `;
-
-                var opt = document.createElement('option');
-                opt.value = s.title;
-                opt.textContent = `${s.title} (${s.cost})`;
-                dropdown.appendChild(opt);
-            });
-        }
-
-        function inquireServiceWhatsApp(serviceTitle, cost) {
-            var decodedTitle = decodeURIComponent(serviceTitle);
-            var message = `Hello *Ghaza Laptops and Computers*, I want to book the following repair service:\n\n` +
-                          `*Service:* ${decodedTitle}\n` +
-                          `*Estimated Price:* ${cost}\n\n` +
-                          `Please let me know when I can bring my device in.`;
-
-            var whatsappUrl = `https://wa.me/${shopWhatsAppNumber}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-        }
-
-        // 3. Handle Repair Request Form Submission
-        document.getElementById('repairBookingForm').addEventListener('submit', function(e) {
+        document.getElementById('trackOrderForm').addEventListener('submit', function(e) {
             e.preventDefault();
-
-            var repairs = JSON.parse(localStorage.getItem('ghaza_repairs') || '[]');
-
-            var newRequest = {
-                id: Date.now(),
-                customerName: document.getElementById('custName').value.trim(),
-                phone: document.getElementById('custPhone').value.trim(),
-                device: document.getElementById('deviceModel').value.trim(),
-                service: document.getElementById('repairServiceSelect').value,
-                issue: document.getElementById('issueDetails').value.trim(),
-                status: 'Pending',
-                date: new Date().toLocaleDateString()
-            };
-
-            repairs.push(newRequest);
-            localStorage.setItem('ghaza_repairs', JSON.stringify(repairs));
-
-            alert("Your repair request has been submitted successfully! We will contact you shortly.");
-            document.getElementById('repairBookingForm').reset();
+            var query = document.getElementById('trackInput').value.trim().toLowerCase();
+            var orders = JSON.parse(localStorage.getItem('ghaza_orders') || '[]');
+            var match = orders.find(function(o) {
+                return (o.orderId && o.orderId.toLowerCase() === query) || (o.phone && o.phone.includes(query));
+            });
+            var resultDiv = document.getElementById('trackResult');
+            if (match) {
+                resultDiv.innerHTML = `
+                    <div style="background: #020617; padding: 1rem; border-radius: 8px; border: 1px solid var(--secondary);">
+                        <p><strong>Order:</strong> ${match.product}</p>
+                        <p><strong>Status:</strong> <span style="color: var(--secondary);">${match.status || 'Processing'}</span></p>
+                    </div>`;
+            } else {
+                resultDiv.innerHTML = '<p style="color: var(--required);">No matching order found.</p>';
+            }
         });
 
-        // Initialize Page Data
-        window.addEventListener('DOMContentLoaded', function() {
-            loadShopProducts();
-            loadShopServices();
-        });
+        window.onload = loadProducts;
     </script>
 </body>
 </html>
