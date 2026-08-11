@@ -3,231 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | Ghaza Laptops and Computers</title>
+    <title>Checkout | Ghaza Laptops & Computers</title>
     <style>
         :root {
             --primary: #2563eb;
-            --primary-hover: #1d4ed8;
+            --primary-dark: #1d4ed8;
             --secondary: #10b981;
-            --dark-bg: #0b1120;
+            --dark-bg: #0f172a;
             --card-bg: #1e293b;
-            --border: #334155;
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
+            --border: #334155;
+            --required: #ef4444;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--dark-bg); color: var(--text-light); min-height: 100vh; padding-bottom: 3rem; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--dark-bg); color: var(--text-light); }
 
-        header { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        header h1 { font-size: 1.5rem; color: #3b82f6; }
-        nav a { color: var(--text-light); text-decoration: none; margin-left: 1.2rem; font-weight: 500; }
-        nav a:hover { color: var(--primary); }
+        header { background: #020617; border-bottom: 1px solid var(--border); padding: 1rem 2rem; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: bold; color: #60a5fa; text-decoration: none; }
+        .req-star { color: var(--required); font-weight: bold; }
 
-        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
-        .section-title { font-size: 1.8rem; margin-bottom: 1rem; color: #60a5fa; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; }
+        .checkout-box { max-width: 600px; margin: 3rem auto; padding: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; }
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        label { display: block; margin-bottom: 0.4rem; font-size: 0.88rem; color: #cbd5e1; }
+        input, textarea, select { width: 100%; padding: 0.75rem; border-radius: 6px; background: #020617; border: 1px solid var(--border); color: white; }
 
-        .checkout-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        @media(max-width: 768px) { .checkout-grid { grid-template-columns: 1fr; } }
-
-        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-        
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; color: #cbd5e1; }
-        input[type="text"], input[type="tel"], textarea {
-            width: 100%; padding: 0.8rem; border-radius: 6px;
-            background: #020617; border: 1px solid var(--border);
-            color: var(--text-light); font-size: 0.95rem; outline: none;
-        }
-        input:focus, textarea:focus { border-color: var(--primary); }
-
-        .order-summary p { margin-bottom: 0.8rem; color: var(--text-muted); font-size: 0.95rem; }
-        .order-summary h3 { color: var(--text-light); margin-bottom: 1rem; }
-        .total-price { font-size: 1.3rem; font-weight: bold; color: var(--secondary); margin-top: 1rem; display: block; }
-
-        /* Payment Selection Box */
-        .payment-option { background: #020617; border: 1px solid var(--border); padding: 1rem; border-radius: 6px; margin-bottom: 0.8rem; }
-        .payment-option label { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--text-light); font-weight: 500; }
-
-        /* Bank Account Details Card */
-        .bank-details-box {
-            display: none;
-            background: #0f172a; border: 1px dashed var(--primary);
-            padding: 1rem; border-radius: 6px; margin: 0.8rem 0 1.2rem 0;
-            font-size: 0.9rem; line-height: 1.6; color: #cbd5e1;
-        }
-        .bank-details-box strong { color: var(--text-light); }
-
-        .file-upload-box {
-            margin-top: 0.8rem;
-            padding-top: 0.8rem;
-            border-top: 1px solid var(--border);
-        }
-        input[type="file"] {
-            width: 100%;
-            background: #020617;
-            padding: 0.5rem;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            color: var(--text-light);
-            font-size: 0.85rem;
-        }
-
-        .btn { padding: 0.8rem 1.2rem; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; background: var(--primary); color: white; width: 100%; text-align: center; }
-        .btn:hover { background: var(--primary-hover); }
+        .btn { padding: 0.8rem 1.6rem; border-radius: 6px; font-weight: bold; cursor: pointer; border: none; width: 100%; background: var(--primary); color: white; }
+        .btn:hover { background: var(--primary-dark); }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Ghaza Laptops and Computers</h1>
-        <nav>
-            <a href="shop.html">Back to Shop</a>
-        </nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Ghaza Laptops & Computers</a>
+        </div>
     </header>
 
-    <div class="container">
-        <h2 class="section-title">📦 Complete Your Order</h2>
+    <div class="checkout-box">
+        <h2 style="color: #60a5fa; margin-bottom: 1rem;">🛍️ Complete Purchase</h2>
         
-        <div class="checkout-grid">
-            <!-- Order Summary Column -->
-            <div class="card order-summary">
-                <h3>Order Summary</h3>
-                <div id="productDetailsContainer">
-                    <p>Loading product details...</p>
-                </div>
+        <form id="checkoutForm">
+            <div class="form-group">
+                <label for="custName">Full Name <span class="req-star">*</span></label>
+                <input type="text" id="custName" required>
             </div>
-
-            <!-- Customer Details & Payment Column -->
-            <div class="card">
-                <form id="checkoutForm">
-                    <h3 style="margin-bottom: 1rem; color: var(--text-light);">Shipping Information</h3>
-                    <div class="form-group">
-                        <label for="fullName">Full Name</label>
-                        <input type="text" id="fullName" placeholder="e.g. Ali Ahmed" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Phone Number</label>
-                        <input type="tel" id="phone" placeholder="e.g. 03001234567" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Delivery Address & City</label>
-                        <textarea id="address" rows="3" placeholder="House #, Street, Area, City" required></textarea>
-                    </div>
-
-                    <h3 style="margin: 1.5rem 0 1rem 0; color: var(--text-light);">Select Payment Method</h3>
-                    
-                    <!-- Option 1: COD -->
-                    <div class="payment-option">
-                        <label>
-                            <input type="radio" name="paymentMethod" value="Cash on Delivery" checked onclick="togglePaymentDetails(false)"> 
-                            Cash on Delivery (COD)
-                        </label>
-                    </div>
-
-                    <!-- Option 2: Online Bank / Mobile Transfer -->
-                    <div class="payment-option">
-                        <label>
-                            <input type="radio" name="paymentMethod" value="Online Bank Transfer" onclick="togglePaymentDetails(true)"> 
-                            Online Bank / Mobile Transfer
-                        </label>
-
-                        <div id="onlineDetailsBox" class="bank-details-box">
-                            <p style="margin-bottom:0.5rem; color:#60a5fa; font-weight:bold;">Transfer Payment To:</p>
-                            <p><strong>Payment Channel:</strong> Easypaisa</p>
-                            <p><strong>Account Name:</strong> Usman Siddique</p>
-                            <p><strong>Account Number:</strong> 03350007575</p>
-                            <p><strong>IBAN Number:</strong> PK59TMFB0000000070987464</p>
-
-                            <div class="file-upload-box">
-                                <label for="paymentReceipt">Upload Payment Screenshot / Receipt</label>
-                                <input type="file" id="paymentReceipt" accept="image/*,.pdf">
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn">Place Order Now</button>
-                </form>
+            <div class="form-group">
+                <label for="custPhone">WhatsApp Phone Number <span class="req-star">*</span></label>
+                <input type="tel" id="custPhone" required>
             </div>
-        </div>
+            <div class="form-group">
+                <label for="custAddress">Delivery Address <span class="req-star">*</span></label>
+                <textarea id="custAddress" rows="2" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="payMethod">Payment Option <span class="req-star">*</span></label>
+                <select id="payMethod" required>
+                    <option value="Cash on Delivery">Cash on Delivery</option>
+                    <option value="Bank Transfer / EasyPaisa">Bank Transfer / EasyPaisa</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Confirm & Place Order</button>
+        </form>
     </div>
 
     <script>
-        // Toggle visibility of account details and receipt upload
-        function togglePaymentDetails(show) {
-            var detailsBox = document.getElementById('onlineDetailsBox');
-            var receiptInput = document.getElementById('paymentReceipt');
-            if (show) {
-                detailsBox.style.display = 'block';
-                receiptInput.setAttribute('required', 'required');
-            } else {
-                detailsBox.style.display = 'none';
-                receiptInput.removeAttribute('required');
-            }
-        }
-
-        // Retrieve selected product details from browser storage
-        var product = JSON.parse(localStorage.getItem('ghaza_checkout_item') || '{}');
-        var summaryContainer = document.getElementById('productDetailsContainer');
-
-        if (!product.title) {
-            summaryContainer.innerHTML = '<p style="color: #ef4444;">No product selected. Please return to the shop and select a product.</p>';
-        } else {
-            summaryContainer.innerHTML = `
-                <p><strong>Product:</strong> ${product.title}</p>
-                <p><strong>Specifications:</strong> ${product.specs || 'N/A'}</p>
-                <span class="total-price">Total: Rs. ${product.price}</span>
-            `;
-        }
-
-        // Handle Order Submission
-        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            if (!product.title) {
-                alert('Error: No product found in order.');
+        // Enforce user authentication before allowing checkout
+        window.onload = function() {
+            var activeUser = sessionStorage.getItem('ghaza_active_user');
+            if (!activeUser) {
+                alert("You must log in or create an account to place an order.");
+                window.location.href = "account.html";
                 return;
             }
 
-            var selectedPaymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            var receiptInput = document.getElementById('paymentReceipt');
+            // Autofill user information if logged in
+            var user = JSON.parse(activeUser);
+            if (user) {
+                document.getElementById('custName').value = user.fullName || '';
+                document.getElementById('custPhone').value = user.phone || '';
+            }
+        };
 
-            var processOrder = function(receiptDataUrl) {
-                var orderData = {
-                    orderId: 'GHAZA-' + Math.floor(100000 + Math.random() * 900000),
-                    product: product.title,
-                    price: product.price,
-                    customerName: document.getElementById('fullName').value.trim(),
-                    phone: document.getElementById('phone').value.trim(),
-                    address: document.getElementById('address').value.trim(),
-                    paymentMethod: selectedPaymentMethod,
-                    receiptImage: receiptDataUrl || null,
-                    status: 'Pending',
-                    date: new Date().toLocaleDateString()
-                };
-
-                // Store order in local storage
-                var orders = JSON.parse(localStorage.getItem('ghaza_orders') || '[]');
-                orders.push(orderData);
-                localStorage.setItem('ghaza_orders', JSON.stringify(orders));
-
-                alert('Order placed successfully! Your Order ID is ' + orderData.orderId + '. We will contact you shortly to confirm dispatch.');
-                
-                // Clear checkout item and redirect back to shop
-                localStorage.removeItem('ghaza_checkout_item');
-                window.location.href = 'shop.html';
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var order = {
+                orderId: "GHZ-" + Math.floor(1000 + Math.random() * 9000),
+                customerName: document.getElementById('custName').value.trim(),
+                phone: document.getElementById('custPhone').value.trim(),
+                address: document.getElementById('custAddress').value.trim(),
+                paymentMethod: document.getElementById('payMethod').value,
+                product: "Laptop / Computer Stock Item",
+                price: "65000",
+                status: "Pending",
+                date: new Date().toLocaleDateString()
             };
 
-            // Convert image file to base64 if online transfer selected
-            if (selectedPaymentMethod === 'Online Bank Transfer' && receiptInput.files && receiptInput.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function(evt) {
-                    processOrder(evt.target.result);
-                };
-                reader.readAsDataURL(receiptInput.files[0]);
-            } else {
-                processOrder(null);
-            }
+            var orders = JSON.parse(localStorage.getItem('ghaza_orders') || '[]');
+            orders.push(order);
+            localStorage.setItem('ghaza_orders', JSON.stringify(orders));
+
+            alert("Order placed successfully! Your Order ID is: " + order.orderId);
+            window.location.href = "account.html";
         });
     </script>
 </body>
