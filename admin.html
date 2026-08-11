@@ -313,7 +313,7 @@
         document.getElementById('adminAuthForm').addEventListener('submit', function(e) {
             e.preventDefault();
             var enteredPass = document.getElementById('adminPasscode').value;
-            var storedPass = localStorage.getItem('ghaza_admin_password') || 'admin123';
+            var storedPass = localStorage.getItem('ghaza_admin_password') || '12345';
 
             if (enteredPass === storedPass) {
                 document.getElementById('loginOverlay').style.display = 'none';
