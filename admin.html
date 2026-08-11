@@ -21,7 +21,23 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
         body { background-color: var(--dark-bg); color: var(--text-light); min-height: 100vh; padding: 2rem 1rem; }
 
-        .admin-container { max-width: 1100px; margin: 0 auto; }
+        /* Security Modal Overlay */
+        #loginOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(11, 17, 32, 0.95);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; backdrop-filter: blur(8px);
+        }
+        .login-card {
+            background: var(--card-bg); border: 1px solid var(--border);
+            padding: 2.5rem; border-radius: 12px; width: 100%; max-width: 400px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.7); text-align: center;
+        }
+        .login-card h2 { color: #60a5fa; margin-bottom: 0.5rem; }
+        .login-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+        /* Main Dashboard UI */
+        .admin-container { max-width: 1100px; margin: 0 auto; display: none; }
 
         header { text-align: center; margin-bottom: 2rem; }
         header h1 { font-size: 2.2rem; color: #3b82f6; margin-bottom: 0.3rem; }
@@ -57,7 +73,7 @@
 
         /* Forms */
         .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
-        .form-group { margin-bottom: 1.2rem; }
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
         label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.88rem; color: #cbd5e1; }
         input, select, textarea {
             width: 100%; padding: 0.8rem; border-radius: 6px;
@@ -73,7 +89,7 @@
 
         /* Buttons & Badges */
         .btn { padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; }
-        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary { background: var(--primary); color: white; width: 100%; }
         .btn-primary:hover { background: var(--primary-hover); }
         .btn-danger { background: var(--danger); color: white; padding: 0.4rem 0.8rem; font-size: 0.8rem; }
         .btn-danger:hover { opacity: 0.9; }
@@ -83,8 +99,29 @@
 </head>
 <body>
 
-    <div class="admin-container">
+    <!-- Lock Screen Modal -->
+    <div id="loginOverlay">
+        <div class="login-card">
+            <h2>🔒 Admin Authentication</h2>
+            <p>Enter your secret passcode to access Ghaza Admin Controls.</p>
+            <form id="adminAuthForm">
+                <div class="form-group">
+                    <label for="adminPasscode">Password</label>
+                    <input type="password" id="adminPasscode" placeholder="Enter password" required autofocus>
+                </div>
+                <p id="authError" style="color: var(--danger); font-size: 0.85rem; margin-bottom: 1rem; display: none;">Invalid Password!</p>
+                <button type="submit" class="btn btn-primary">Unlock Panel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Content -->
+    <div class="admin-container" id="adminDashboard">
         <header>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <span style="color: var(--secondary); font-size: 0.9rem;">● Authenticated Session</span>
+                <button class="btn btn-danger" onclick="logoutAdmin()" style="width: auto;">🔒 Lock Dashboard</button>
+            </div>
             <h1>Ghaza Admin Panel</h1>
             <p>Inventory, Orders, Services & Access Control Dashboard</p>
         </header>
@@ -146,7 +183,6 @@
                     </div>
                 </div>
 
-                <!-- Multiple Image Upload Input -->
                 <div class="form-group">
                     <label for="prodImages">Product Images (Upload multiple photos)</label>
                     <input type="file" id="prodImages" accept="image/*" multiple required>
@@ -157,7 +193,7 @@
                     <label for="prodSpecs">Specifications / Description</label>
                     <textarea id="prodSpecs" rows="2" placeholder="e.g. 16GB RAM, 512GB NVMe SSD, 14 inch FHD display" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Add Product Stock</button>
+                <button type="submit" class="btn btn-primary" style="width: auto;">Add Product Stock</button>
             </form>
 
             <table class="data-table">
@@ -200,7 +236,6 @@
                 <p>Add dynamic services for your shop page and handle customer requests.</p>
             </div>
 
-            <!-- Add Service Form -->
             <h3 class="sub-heading">➕ Add Custom Repair Service</h3>
             <form id="addServiceForm" style="margin-bottom: 2rem;">
                 <div class="form-grid">
@@ -217,10 +252,9 @@
                     <label for="serviceDescription">Service Description</label>
                     <textarea id="serviceDescription" rows="2" placeholder="e.g. Sector-by-sector data extraction from damaged drives." required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary">Save & Publish Service</button>
+                <button type="submit" class="btn btn-primary" style="width: auto;">Save & Publish Service</button>
             </form>
 
-            <!-- Table of Added Services -->
             <h3 style="margin-top: 1rem; font-size: 1rem; color: #cbd5e1;">Active Offered Repair Services</h3>
             <table class="data-table" style="margin-bottom: 2.5rem;">
                 <thead>
@@ -234,7 +268,6 @@
                 <tbody id="offeredServicesTableBody"></tbody>
             </table>
 
-            <!-- Customer Service Submissions -->
             <h3 style="margin-top: 1rem; font-size: 1rem; color: #cbd5e1;">Customer Service Requests</h3>
             <table class="data-table">
                 <thead>
@@ -270,13 +303,34 @@
                     <label for="confirmNewPass">Confirm New Password</label>
                     <input type="password" id="confirmNewPass" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Update Admin Password</button>
+                <button type="submit" class="btn btn-primary" style="width: auto;">Update Admin Password</button>
             </form>
         </div>
     </div>
 
     <script>
-        // Tab Navigation Switcher
+        // Authentication Guard
+        document.getElementById('adminAuthForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var enteredPass = document.getElementById('adminPasscode').value;
+            var storedPass = localStorage.getItem('ghaza_admin_password') || 'admin123';
+
+            if (enteredPass === storedPass) {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                sessionStorage.setItem('ghaza_admin_authenticated', 'true');
+                loadAllDashboards();
+            } else {
+                document.getElementById('authError').style.display = 'block';
+            }
+        });
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('ghaza_admin_authenticated');
+            location.reload();
+        }
+
+        // Tab Switcher
         function switchTab(tabName, btnElement) {
             var tabs = document.querySelectorAll('.nav-tab');
             tabs.forEach(function(t) { t.classList.remove('active'); });
@@ -292,7 +346,7 @@
             if (tabName === 'security') document.getElementById('cardSecurity').classList.add('active-card');
         }
 
-        // --- CUSTOMER ORDERS MANAGEMENT ---
+        // Dashboard Data Operations
         function loadOrders() {
             var orders = JSON.parse(localStorage.getItem('ghaza_orders') || '[]');
             var tbody = document.getElementById('ordersTableBody');
@@ -346,7 +400,6 @@
             loadOrders();
         }
 
-        // --- PRODUCTS MANAGEMENT WITH MULTIPLE IMAGES ---
         function loadProducts() {
             var stock = JSON.parse(localStorage.getItem('ghaza_stock') || '[]');
             var tbody = document.getElementById('stockTableBody');
@@ -420,7 +473,6 @@
             loadProducts();
         }
 
-        // --- OFFERED REPAIR SERVICES MANAGEMENT ---
         function loadOfferedServices() {
             var services = JSON.parse(localStorage.getItem('ghaza_offered_services') || '[]');
             var tbody = document.getElementById('offeredServicesTableBody');
@@ -467,11 +519,9 @@
             loadOfferedServices();
         }
 
-        // --- USERS MANAGEMENT ---
         function loadUsers() {
             var users = JSON.parse(localStorage.getItem('ghaza_users') || '[]');
 
-            // Set default account info if none exists in browser local storage
             if (users.length === 0) {
                 users = [{
                     fullName: "Ghaza laptops",
@@ -503,7 +553,6 @@
             loadUsers();
         }
 
-        // --- REPAIR LOG MANAGEMENT ---
         function loadRepairs() {
             var repairs = JSON.parse(localStorage.getItem('ghaza_repairs') || '[]');
             var tbody = document.getElementById('repairsTableBody');
@@ -551,7 +600,6 @@
             loadRepairs();
         }
 
-        // --- SECURITY FORM ---
         document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
             e.preventDefault();
             var newPass = document.getElementById('newPass').value;
@@ -567,13 +615,21 @@
             document.getElementById('changePasswordForm').reset();
         });
 
-        // Initialize All Dashboards
-        window.onload = function() {
+        function loadAllDashboards() {
             loadOrders();
             loadProducts();
             loadUsers();
             loadOfferedServices();
             loadRepairs();
+        }
+
+        // Auto-login check if already authenticated in active session
+        window.onload = function() {
+            if (sessionStorage.getItem('ghaza_admin_authenticated') === 'true') {
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'block';
+                loadAllDashboards();
+            }
         };
     </script>
 </body>
