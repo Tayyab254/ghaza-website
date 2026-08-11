@@ -3,351 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account | Ghaza Laptops and Computers</title>
+    <title>Customer Account | Ghaza Laptops & Computers</title>
     <style>
         :root {
             --primary: #2563eb;
-            --primary-hover: #1d4ed8;
+            --primary-dark: #1d4ed8;
             --secondary: #10b981;
-            --dark-bg: #0b1120;
+            --dark-bg: #0f172a;
             --card-bg: #1e293b;
-            --border: #334155;
             --text-light: #f8fafc;
             --text-muted: #94a3b8;
-            --warning: #f59e0b;
-            --danger: #ef4444;
+            --border: #334155;
+            --required: #ef4444;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-        body { background-color: var(--dark-bg); color: var(--text-light); min-height: 100vh; display: flex; flex-direction: column; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--dark-bg); color: var(--text-light); min-height: 100vh; }
 
-        /* Navigation Bar */
-        nav { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        nav .logo { font-size: 1.3rem; font-weight: bold; color: var(--primary); text-decoration: none; }
-        nav .nav-links a { color: var(--text-light); text-decoration: none; margin-left: 1.5rem; }
-        nav .nav-links a.active { color: var(--primary); font-weight: bold; }
+        header { background: #020617; border-bottom: 1px solid var(--border); padding: 1rem 2rem; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: bold; color: #60a5fa; text-decoration: none; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
+        .nav-links a { color: var(--text-light); text-decoration: none; font-weight: 500; }
+        .nav-links a:hover { color: #60a5fa; }
+        .req-star { color: var(--required); font-weight: bold; }
 
-        .container { max-width: 500px; margin: 2rem auto; padding: 0 1rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .auth-container { max-width: 480px; margin: 3rem auto; padding: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; }
+        .auth-tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); pb: 0.5rem; }
+        .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 1.1rem; font-weight: bold; cursor: pointer; padding-bottom: 0.5rem; }
+        .tab-btn.active { color: #60a5fa; border-bottom: 2px solid var(--primary); }
 
-        /* Account Card Container */
-        .account-card {
-            background: var(--card-bg); 
-            border: 1px solid var(--border);
-            padding: 2rem; 
-            border-radius: 12px; 
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-        }
+        .form-group { margin-bottom: 1.2rem; text-align: left; }
+        label { display: block; margin-bottom: 0.4rem; font-size: 0.88rem; color: #cbd5e1; }
+        input { width: 100%; padding: 0.75rem; border-radius: 6px; background: #020617; border: 1px solid var(--border); color: white; }
+        input:focus { outline: none; border-color: var(--primary); }
 
-        /* Sign In / Register Tab Toggle */
-        .tab-buttons { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
-        .tab-btn {
-            flex: 1; padding: 0.8rem; background: transparent; border: none;
-            color: var(--text-muted); font-weight: bold; font-size: 1rem;
-            cursor: pointer; transition: 0.3s; text-align: center;
-        }
-        .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); }
+        .btn { padding: 0.75rem 1.4rem; border-radius: 6px; font-weight: bold; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-danger { background: var(--required); color: white; width: auto; }
 
-        .form-group { margin-bottom: 1.2rem; }
-        label { display: block; margin-bottom: 0.4rem; font-weight: 600; font-size: 0.88rem; color: #cbd5e1; }
-        
-        input, select {
-            width: 100%; padding: 0.8rem; border-radius: 6px;
-            background: #020617; border: 1px solid var(--border);
-            color: var(--text-light); font-size: 0.95rem; outline: none;
-            transition: border-color 0.2s ease;
-        }
-        input:focus, select:focus { border-color: var(--primary); }
-
-        /* Phone Input Prefix */
-        .phone-input-group {
-            display: flex; align-items: center; background: #020617;
-            border: 1px solid var(--border); border-radius: 6px; overflow: hidden; width: 100%;
-        }
-        .phone-prefix {
-            padding: 0.8rem; background: var(--border); color: var(--text-light);
-            font-weight: bold; font-size: 0.95rem; border-right: 1px solid var(--border); min-width: 65px; text-align: center;
-        }
-        .phone-input-group input { border: none; border-radius: 0; }
-
-        /* Inline Button for Email Code */
-        .inline-group { display: flex; gap: 0.5rem; }
-        .btn-send-code {
-            background: var(--warning); color: #020617; border: none;
-            padding: 0.8rem 1rem; border-radius: 6px; font-weight: bold;
-            cursor: pointer; white-space: nowrap; transition: 0.3s;
-        }
-        .btn-send-code:hover { opacity: 0.9; }
-
-        /* Action Buttons */
-        .btn-submit {
-            background: var(--primary); color: white; border: none;
-            padding: 0.85rem; border-radius: 6px; font-weight: bold;
-            cursor: pointer; width: 100%; font-size: 1rem; transition: 0.3s; margin-top: 0.5rem;
-        }
-        .btn-submit:hover { background: var(--primary-hover); }
-
-        .btn-logout {
-            background: var(--danger); color: white; border: none;
-            padding: 0.75rem 1.2rem; border-radius: 6px; font-weight: bold;
-            cursor: pointer; margin-top: 1.5rem; width: 100%; transition: 0.3s;
-        }
-        .btn-logout:hover { opacity: 0.9; }
-
-        /* Profile Details Layout */
-        .profile-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
-        .profile-label { color: var(--text-muted); font-weight: 600; }
-        .profile-value { font-weight: bold; color: var(--text-light); }
+        .dashboard-container { max-width: 900px; margin: 3rem auto; padding: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; display: none; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        .data-table th, .data-table td { padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .data-table th { background: #020617; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-    <nav>
-        <a href="index.html" class="logo">Ghaza Laptops & Computers</a>
-        <div class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="shop.html">Shop Stock</a>
-            <a href="repair.html">Repair Services</a>
-            <a href="account.html" class="active">My Account</a>
+    <header>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Ghaza Laptops & Computers</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop Inventory</a></li>
+                <li><a href="account.html" style="color: #60a5fa;">Account / Orders</a></li>
+            </ul>
         </div>
-    </nav>
+    </header>
 
-    <div class="container">
-        <!-- VIEW 1: AUTHENTICATION CARD (LOGIN & REGISTER TABS) -->
-        <div class="account-card" id="authCard">
-            <div class="tab-buttons">
-                <button class="tab-btn active" id="tabSignIn" onclick="switchTab('signin')">Sign In</button>
-                <button class="tab-btn" id="tabRegister" onclick="switchTab('register')">Register</button>
+    <!-- AUTHENTICATION FORM (LOGIN / REGISTER) -->
+    <div class="auth-container" id="authBox">
+        <div class="auth-tabs">
+            <button class="tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">Login</button>
+            <button class="tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">Register Account</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">Email Address <span class="req-star">*</span></label>
+                <input type="email" id="loginEmail" placeholder="e.g. user@gmail.com" required>
             </div>
+            <div class="form-group">
+                <label for="loginPass">Password <span class="req-star">*</span></label>
+                <input type="password" id="loginPass" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+        </form>
 
-            <!-- FORM 1: SIGN IN -->
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail">Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="e.g. user@example.com" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="loginPassword">Password</label>
-                    <input type="password" id="loginPassword" placeholder="Enter password" required>
-                </div>
-
-                <button type="submit" class="btn-submit">Sign In</button>
-            </form>
-
-            <!-- FORM 2: REGISTRATION (COMPLETE FORM) -->
-            <form id="customerRegisterForm" style="display: none;">
-                <div class="form-group">
-                    <label for="regFullName">Full Name</label>
-                    <input type="text" id="regFullName" placeholder="e.g. Tayyab Khan" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="regCountry">Country</label>
-                    <select id="regCountry" onchange="updateCountryCode()" required>
-                        <option value="+92" selected>🇵🇰 Pakistan (+92)</option>
-                        <option value="+971">🇦🇪 United Arab Emirates (+971)</option>
-                        <option value="+966">🇸🇦 Saudi Arabia (+966)</option>
-                        <option value="+44">🇬🇧 United Kingdom (+44)</option>
-                        <option value="+1">🇺🇸 United States / Canada (+1)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="regPhone">WhatsApp Phone Number</label>
-                    <div class="phone-input-group">
-                        <span class="phone-prefix" id="phoneCodeDisplay">+92</span>
-                        <input type="tel" id="regPhone" placeholder="3001234567" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="regEmail">Email Address</label>
-                    <div class="inline-group">
-                        <input type="email" id="regEmail" placeholder="e.g. user@example.com" required>
-                        <button type="button" class="btn-send-code" onclick="sendEmailVerificationCode()">Get Code</button>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="regEmailCode">Email Verification Code</label>
-                    <input type="text" id="regEmailCode" placeholder="Enter 6-digit code" maxlength="6" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="regPassword">Password</label>
-                    <input type="password" id="regPassword" placeholder="Enter password" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="regConfirmPassword">Confirm Password</label>
-                    <input type="password" id="regConfirmPassword" placeholder="Confirm password" required>
-                </div>
-
-                <button type="submit" class="btn-submit">Create Account</button>
-            </form>
-        </div>
-
-        <!-- VIEW 2: LOGGED IN PROFILE DASHBOARD -->
-        <div class="account-card" id="profileCard" style="display: none;">
-            <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary);">User Profile</h2>
+        <!-- REGISTER FORM -->
+        <form id="registerForm" style="display: none;">
+            <div class="form-group">
+                <label for="regName">Full Name <span class="req-star">*</span></label>
+                <input type="text" id="regName" placeholder="e.g. Ali Raza" required>
+            </div>
+            <div class="form-group">
+                <label for="regEmail">Email Address <span class="req-star">*</span></label>
+                <input type="email" id="regEmail" placeholder="e.g. user@gmail.com" required>
+            </div>
+            <div class="form-group">
+                <label for="regPhone">WhatsApp Phone Number <span class="req-star">*</span></label>
+                <input type="tel" id="regPhone" placeholder="e.g. 03350007575" required>
+            </div>
+            <div class="form-group">
+                <label for="regPass">Password <span class="req-star">*</span></label>
+                <input type="password" id="regPass" placeholder="Create password" required>
+            </div>
             
-            <div class="profile-row">
-                <span class="profile-label">Full Name:</span>
-                <span class="profile-value" id="dispFullName"></span>
-            </div>
-            <div class="profile-row">
-                <span class="profile-label">Email Address:</span>
-                <span class="profile-value" id="dispEmail"></span>
-            </div>
-            <div class="profile-row">
-                <span class="profile-label">WhatsApp Number:</span>
-                <span class="profile-value" id="dispPhone"></span>
+            <!-- OTP Step -->
+            <div class="form-group" id="otpGroup">
+                <label for="regOtp">Verification Code (OTP) <span class="req-star">*</span></label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="regOtp" placeholder="Enter 4-digit OTP" required>
+                    <button type="button" class="btn btn-primary" onclick="sendOtp()" style="width: 40%; font-size: 0.8rem;">Send OTP</button>
+                </div>
+                <small style="color: var(--secondary);" id="otpNotice"></small>
             </div>
 
-            <button class="btn-logout" onclick="logoutUser()">Sign Out</button>
+            <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+    </div>
+
+    <!-- LOGGED-IN DASHBOARD (ACCOUNT & TRACKING) -->
+    <div class="dashboard-container" id="userDashboard">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2>Welcome, <span id="dashUserName" style="color: #60a5fa;">User</span></h2>
+            <button class="btn btn-danger" onclick="logoutUser()">Log Out</button>
         </div>
+
+        <h3 style="margin-bottom: 1rem; color: #cbd5e1;">📦 Your Tracked Orders</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Product Details</th>
+                    <th>Price</th>
+                    <th>Order Status</th>
+                </tr>
+            </thead>
+            <tbody id="userOrdersTable">
+                <!-- User specific orders render here -->
+            </tbody>
+        </table>
     </div>
 
     <script>
-        var generatedVerificationCode = null;
+        var generatedOtp = null;
 
-        // Check active session on load
-        function checkUserAuth() {
-            var loggedUser = JSON.parse(localStorage.getItem('ghaza_logged_user'));
-
-            if (loggedUser) {
-                document.getElementById('authCard').style.display = 'none';
-                document.getElementById('profileCard').style.display = 'block';
-
-                document.getElementById('dispFullName').innerText = loggedUser.fullName || 'N/A';
-                document.getElementById('dispEmail').innerText = loggedUser.email || 'N/A';
-                document.getElementById('dispPhone').innerText = loggedUser.phone || 'N/A';
+        function switchAuthTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('loginForm').style.display = 'block';
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('tabLoginBtn').classList.add('active');
+                document.getElementById('tabRegisterBtn').classList.remove('active');
             } else {
-                document.getElementById('authCard').style.display = 'block';
-                document.getElementById('profileCard').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'block';
+                document.getElementById('tabRegisterBtn').classList.add('active');
+                document.getElementById('tabLoginBtn').classList.remove('active');
             }
         }
 
-        // Tab Switching Handler
-        function switchTab(tab) {
-            var signinTab = document.getElementById('tabSignIn');
-            var registerTab = document.getElementById('tabRegister');
-            var loginForm = document.getElementById('loginForm');
-            var registerForm = document.getElementById('customerRegisterForm');
-
-            if (tab === 'signin') {
-                signinTab.classList.add('active');
-                registerTab.classList.remove('active');
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
-            } else {
-                registerTab.classList.add('active');
-                signinTab.classList.remove('active');
-                registerForm.style.display = 'block';
-                loginForm.style.display = 'none';
-            }
+        function sendOtp() {
+            generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
+            document.getElementById('otpNotice').innerText = "Verification Code sent: " + generatedOtp;
+            alert("Your demo OTP is: " + generatedOtp);
         }
 
-        // Country Code Prefix Sync
-        function updateCountryCode() {
-            var selectedCode = document.getElementById('regCountry').value;
-            document.getElementById('phoneCodeDisplay').innerText = selectedCode;
-        }
-
-        // Verification Code Generation
-        function sendEmailVerificationCode() {
-            var emailInput = document.getElementById('regEmail').value.trim();
-            if (!emailInput) {
-                alert("Please enter a valid email address first!");
-                return;
-            }
-
-            generatedVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-            alert("Verification code sent to " + emailInput + "!\n\nYour 6-digit verification code is: " + generatedVerificationCode);
-        }
-
-        // Sign In Form Handler
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        // Registration Submission
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            var otpEntered = document.getElementById('regOtp').value.trim();
 
-            var email = document.getElementById('loginEmail').value.trim().toLowerCase();
-            var password = document.getElementById('loginPassword').value;
-
-            var users = JSON.parse(localStorage.getItem('ghaza_users') || '[]');
-            var matchedUser = users.find(function(u) {
-                return u.email === email && u.password === password;
-            });
-
-            if (matchedUser) {
-                localStorage.setItem('ghaza_logged_user', JSON.stringify(matchedUser));
-                alert("Welcome back, " + matchedUser.fullName + "!");
-                checkUserAuth();
-            } else {
-                alert("Invalid email address or password. Please check your credentials.");
-            }
-        });
-
-        // Registration Form Handler
-        document.getElementById('customerRegisterForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            var fullName = document.getElementById('regFullName').value.trim();
-            var email = document.getElementById('regEmail').value.trim().toLowerCase();
-            var countryCode = document.getElementById('regCountry').value;
-            var phoneBody = document.getElementById('regPhone').value.trim();
-            var fullPhone = countryCode + phoneBody;
-            var enteredEmailCode = document.getElementById('regEmailCode').value.trim();
-            var password = document.getElementById('regPassword').value;
-            var confirmPassword = document.getElementById('regConfirmPassword').value;
-
-            if (!generatedVerificationCode) {
-                alert("Please click 'Get Code' to generate your email verification code.");
-                return;
-            }
-            if (enteredEmailCode !== generatedVerificationCode) {
-                alert("Invalid email verification code!");
-                return;
-            }
-            if (password !== confirmPassword) {
-                alert("Passwords do not match!");
+            if (generatedOtp && otpEntered !== generatedOtp) {
+                alert("Invalid OTP Code! Please enter the correct code.");
                 return;
             }
 
-            var users = JSON.parse(localStorage.getItem('ghaza_users') || '[]');
-            var existingUser = users.find(function(u) { return u.email === email; });
-
-            if (existingUser) {
-                alert("An account with this email address already exists! Please sign in.");
-                switchTab('signin');
-                return;
-            }
-
-            var newUser = {
-                id: Date.now(),
-                fullName: fullName,
-                email: email,
-                phone: fullPhone,
-                password: password
+            var user = {
+                fullName: document.getElementById('regName').value.trim(),
+                email: document.getElementById('regEmail').value.trim(),
+                phone: document.getElementById('regPhone').value.trim(),
+                password: document.getElementById('regPass').value.trim()
             };
 
-            users.push(newUser);
+            var users = JSON.parse(localStorage.getItem('ghaza_users') || '[]');
+            users.push(user);
             localStorage.setItem('ghaza_users', JSON.stringify(users));
 
-            // Log user in automatically after registration
-            localStorage.setItem('ghaza_logged_user', JSON.stringify(newUser));
-
-            alert("Account registered successfully! Welcome, " + fullName + ".");
-            checkUserAuth();
+            // Log user in automatically
+            sessionStorage.setItem('ghaza_active_user', JSON.stringify(user));
+            checkSession();
         });
 
-        // Sign Out Handler
+        // Login Submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var email = document.getElementById('loginEmail').value.trim();
+            var pass = document.getElementById('loginPass').value.trim();
+
+            var users = JSON.parse(localStorage.getItem('ghaza_users') || '[]');
+            var match = users.find(function(u) { return u.email === email && u.password === pass; });
+
+            if (match) {
+                sessionStorage.setItem('ghaza_active_user', JSON.stringify(match));
+                checkSession();
+            } else {
+                alert("Invalid Email or Password!");
+            }
+        });
+
         function logoutUser() {
-            localStorage.removeItem('ghaza_logged_user');
-            alert("You have signed out.");
-            checkUserAuth();
+            sessionStorage.removeItem('ghaza_active_user');
+            location.reload();
         }
 
-        window.onload = checkUserAuth;
+        function checkSession() {
+            var activeUser = JSON.parse(sessionStorage.getItem('ghaza_active_user'));
+            if (activeUser) {
+                document.getElementById('authBox').style.display = 'none';
+                document.getElementById('userDashboard').style.display = 'block';
+                document.getElementById('dashUserName').innerText = activeUser.fullName;
+
+                loadUserOrders(activeUser.phone);
+            }
+        }
+
+        function loadUserOrders(userPhone) {
+            var orders = JSON.parse(localStorage.getItem('ghaza_orders') || '[]');
+            var tbody = document.getElementById('userOrdersTable');
+            tbody.innerHTML = '';
+
+            var myOrders = orders.filter(function(o) {
+                return o.phone && o.phone.includes(userPhone);
+            });
+
+            if (myOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="color: var(--text-muted); text-align:center;">No active or past orders found for your account.</td></tr>';
+                return;
+            }
+
+            myOrders.forEach(function(item) {
+                var tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong style="color:#60a5fa;">${item.orderId || 'N/A'}</strong></td>
+                    <td>${item.product}</td>
+                    <td>Rs. ${item.price}</td>
+                    <td><span style="color: var(--secondary); font-weight:bold;">${item.status || 'Processing'}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.onload = checkSession;
     </script>
 </body>
 </html>
