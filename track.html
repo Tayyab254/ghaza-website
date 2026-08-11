@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order | Ghaza Laptops and Computers</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary: #10b981;
+            --dark-bg: #0b1120;
+            --card-bg: #1e293b;
+            --border: #334155;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--dark-bg); color: var(--text-light); min-height: 100vh; padding-bottom: 3rem; }
+
+        header { background: var(--card-bg); border-bottom: 1px solid var(--border); padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 1.5rem; color: #3b82f6; }
+        nav a { color: var(--text-light); text-decoration: none; margin-left: 1.2rem; font-weight: 500; }
+        nav a:hover { color: var(--primary); }
+
+        .container { max-width: 700px; margin: 3rem auto; padding: 0 1rem; }
+        .card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 1.5rem; }
+
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; color: #cbd5e1; }
+        input[type="text"] {
+            width: 100%; padding: 0.8rem; border-radius: 6px;
+            background: #020617; border: 1px solid var(--border);
+            color: var(--text-light); font-size: 0.95rem; outline: none;
+        }
+        input:focus { border-color: var(--primary); }
+
+        .btn { padding: 0.8rem 1.2rem; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; background: var(--primary); color: white; width: 100%; }
+        .btn:hover { background: var(--primary-hover); }
+
+        /* Order Result Display */
+        .order-result { display: none; margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem; }
+        .status-badge {
+            display: inline-block; padding: 0.4rem 0.8rem; border-radius: 20px; font-weight: bold; font-size: 0.85rem; margin-bottom: 1rem;
+        }
+        .status-Pending { background: #854d0e; color: #fef08a; }
+        .status-Processing { background: #1e40af; color: #bfdbfe; }
+        .status-Dispatched { background: #15803d; color: #bbf7d0; }
+        .status-Delivered { background: #065f46; color: #a7f3d0; }
+        .status-Cancelled { background: #991b1b; color: #fecaca; }
+
+        .order-info-line { display: flex; justify-content: space-between; margin-bottom: 0.6rem; font-size: 0.95rem; border-bottom: 1px dashed var(--border); padding-bottom: 0.4rem; }
+        .order-info-line span { color: var(--text-muted); }
+        .order-info-line strong { color: var(--text-light); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Ghaza Laptops and Computers</h1>
+        <nav>
+            <a href="shop.html">Shop</a>
+            <a href="track.html">Track Order</a>
+            <a href="admin.html">Admin Panel</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2 style="color: #60a5fa; margin-bottom: 0.5rem;">🔍 Track Your Order</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Enter your Order ID (e.g., GHAZA-123456) or Phone Number to check your shipping status.</p>
+
+            <form id="trackingForm">
+                <div class="form-group">
+                    <label for="searchQuery">Order ID or Phone Number</label>
+                    <input type="text" id="searchQuery" placeholder="e.g. GHAZA-482910 or 03350007575" required>
+                </div>
+                <button type="submit" class="btn">Check Status</button>
+            </form>
+
+            <div id="resultBox" class="order-result"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('trackingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var query = document.getElementById('searchQuery').value.trim().toLowerCase();
+            var resultBox = document.getElementById('resultBox');
+            var orders = JSON.parse(localStorage.getItem('ghaza_orders') || '[]');
+
+            var matchedOrders = orders.filter(function(ord) {
+                return (ord.orderId && ord.orderId.toLowerCase() === query) || 
+                       (ord.phone && ord.phone.toLowerCase() === query);
+            });
+
+            if (matchedOrders.length === 0) {
+                resultBox.style.display = 'block';
+                resultBox.innerHTML = '<p style="color: #ef4444; text-align: center;">No order found matching that Order ID or Phone Number.</p>';
+                return;
+            }
+
+            var html = '<h3 style="margin-bottom: 1rem; color: var(--text-light);">Order Status:</h3>';
+
+            matchedOrders.forEach(function(ord) {
+                var currentStatus = ord.status || 'Pending';
+                html += `
+                    <div style="background: #020617; padding: 1.2rem; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <strong style="color: #60a5fa; font-size: 1.1rem;">${ord.orderId}</strong>
+                            <span class="status-badge status-${currentStatus}">${currentStatus}</span>
+                        </div>
+                        <div class="order-info-line"><span>Product:</span> <strong>${ord.product}</strong></div>
+                        <div class="order-info-line"><span>Total Price:</span> <strong>Rs. ${ord.price}</strong></div>
+                        <div class="order-info-line"><span>Payment Method:</span> <strong>${ord.paymentMethod}</strong></div>
+                        <div class="order-info-line"><span>Customer Name:</span> <strong>${ord.customerName}</strong></div>
+                        <div class="order-info-line"><span>Delivery Address:</span> <strong>${ord.address}</strong></div>
+                        <div class="order-info-line"><span>Order Date:</span> <strong>${ord.date}</strong></div>
+                    </div>
+                `;
+            });
+
+            resultBox.style.display = 'block';
+            resultBox.innerHTML = html;
+        });
+    </script>
+</body>
+</html>
