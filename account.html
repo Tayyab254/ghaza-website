@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Account | Ghaza Laptops & Computers</title>
+    <title>Customer Account & Repair Tracking | Ghaza Laptops & Computers</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -15,6 +15,7 @@
             --text-muted: #94a3b8;
             --border: #334155;
             --required: #ef4444;
+            --warning: #f59e0b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
@@ -29,24 +30,30 @@
         .req-star { color: var(--required); font-weight: bold; }
 
         .auth-container { max-width: 480px; margin: 3rem auto; padding: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; }
-        .auth-tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); pb: 0.5rem; }
+        .auth-tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
         .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 1.1rem; font-weight: bold; cursor: pointer; padding-bottom: 0.5rem; }
         .tab-btn.active { color: #60a5fa; border-bottom: 2px solid var(--primary); }
 
         .form-group { margin-bottom: 1.2rem; text-align: left; }
         label { display: block; margin-bottom: 0.4rem; font-size: 0.88rem; color: #cbd5e1; }
-        input { width: 100%; padding: 0.75rem; border-radius: 6px; background: #020617; border: 1px solid var(--border); color: white; }
-        input:focus { outline: none; border-color: var(--primary); }
+        input, textarea, select { width: 100%; padding: 0.75rem; border-radius: 6px; background: #020617; border: 1px solid var(--border); color: white; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); }
 
         .btn { padding: 0.75rem 1.4rem; border-radius: 6px; font-weight: bold; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: var(--primary-dark); }
         .btn-danger { background: var(--required); color: white; width: auto; }
 
-        .dashboard-container { max-width: 900px; margin: 3rem auto; padding: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; display: none; }
+        .dashboard-container { max-width: 950px; margin: 3rem auto; padding: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; display: none; }
+        .dash-tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; }
+        
         .data-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
         .data-table th, .data-table td { padding: 0.8rem; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
         .data-table th { background: #020617; color: var(--text-muted); }
+
+        .badge { padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+        .badge-warning { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+        .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--secondary); border: 1px solid var(--secondary); }
     </style>
 </head>
 <body>
@@ -57,7 +64,7 @@
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="shop.html">Shop Inventory</a></li>
-                <li><a href="account.html" style="color: #60a5fa;">Account / Orders</a></li>
+                <li><a href="account.html" style="color: #60a5fa;">Account / Services</a></li>
             </ul>
         </div>
     </header>
@@ -115,27 +122,79 @@
         </form>
     </div>
 
-    <!-- LOGGED-IN DASHBOARD (ACCOUNT & TRACKING) -->
+    <!-- LOGGED-IN DASHBOARD (ORDERS & REPAIR SERVICES) -->
     <div class="dashboard-container" id="userDashboard">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h2>Welcome, <span id="dashUserName" style="color: #60a5fa;">User</span></h2>
             <button class="btn btn-danger" onclick="logoutUser()">Log Out</button>
         </div>
 
-        <h3 style="margin-bottom: 1rem; color: #cbd5e1;">📦 Your Tracked Orders</h3>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Product Details</th>
-                    <th>Price</th>
-                    <th>Order Status</th>
-                </tr>
-            </thead>
-            <tbody id="userOrdersTable">
-                <!-- User specific orders render here -->
-            </tbody>
-        </table>
+        <div class="dash-tabs">
+            <button class="tab-btn active" id="tabOrdersBtn" onclick="switchDashTab('orders')">📦 Track Orders</button>
+            <button class="tab-btn" id="tabRepairsBtn" onclick="switchDashTab('repairs')">🛠️ Repair & Maintenance Services</button>
+        </div>
+
+        <!-- SECTION 1: ORDERS TRACKING -->
+        <div id="sectionOrders">
+            <h3 style="margin-bottom: 1rem; color: #cbd5e1;">Your Product Orders</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Product Details</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="userOrdersTable">
+                    <!-- User specific orders render here -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- SECTION 2: REPAIR SERVICES TRACKING & SUBMISSION -->
+        <div id="sectionRepairs" style="display: none;">
+            <h3 style="margin-bottom: 1rem; color: #cbd5e1;">Active Repair Tickets & Maintenance History</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Ticket #</th>
+                        <th>Device & Issue</th>
+                        <th>Service Type</th>
+                        <th>Estimated Cost</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="userRepairsTable">
+                    <!-- Repair jobs render here -->
+                </tbody>
+            </table>
+
+            <hr style="border-color: var(--border); margin: 2rem 0;">
+
+            <h4 style="color: #60a5fa; margin-bottom: 1rem;">🔧 Submit New Repair / Maintenance Ticket</h4>
+            <form id="repairTicketForm">
+                <div class="form-group">
+                    <label for="deviceModel">Laptop / Computer Model <span class="req-star">*</span></label>
+                    <input type="text" id="deviceModel" placeholder="e.g. HP EliteBook 840 G5 / Custom Desktop PC" required>
+                </div>
+                <div class="form-group">
+                    <label for="serviceType">Required Service <span class="req-star">*</span></label>
+                    <select id="serviceType" required>
+                        <option value="Hardware Diagnostic & Repair">Hardware Diagnostic & Repair</option>
+                        <option value="SSD / RAM Upgrade & Data Cloning">SSD / RAM Upgrade & Data Cloning</option>
+                        <option value="Screen / Battery / Keyboard Replacement">Screen / Battery / Keyboard Replacement</option>
+                        <option value="Windows OS & Driver Installation">Windows OS & Driver Installation</option>
+                        <option value="Thermal Paste & Cooling Fan Service">Thermal Paste & Cooling Fan Service</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="issueDesc">Description of Issue / Special Request <span class="req-star">*</span></label>
+                    <textarea id="issueDesc" rows="3" placeholder="Describe hardware issues, beep codes, or upgrade specifications..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: auto;">Submit Repair Request</button>
+            </form>
+        </div>
     </div>
 
     <script>
@@ -152,6 +211,20 @@
                 document.getElementById('registerForm').style.display = 'block';
                 document.getElementById('tabRegisterBtn').classList.add('active');
                 document.getElementById('tabLoginBtn').classList.remove('active');
+            }
+        }
+
+        function switchDashTab(tab) {
+            if (tab === 'orders') {
+                document.getElementById('sectionOrders').style.display = 'block';
+                document.getElementById('sectionRepairs').style.display = 'none';
+                document.getElementById('tabOrdersBtn').classList.add('active');
+                document.getElementById('tabRepairsBtn').classList.remove('active');
+            } else {
+                document.getElementById('sectionOrders').style.display = 'none';
+                document.getElementById('sectionRepairs').style.display = 'block';
+                document.getElementById('tabRepairsBtn').classList.add('active');
+                document.getElementById('tabOrdersBtn').classList.remove('active');
             }
         }
 
@@ -182,7 +255,6 @@
             users.push(user);
             localStorage.setItem('ghaza_users', JSON.stringify(users));
 
-            // Log user in automatically
             sessionStorage.setItem('ghaza_active_user', JSON.stringify(user));
             checkSession();
         });
@@ -204,6 +276,30 @@
             }
         });
 
+        // Submit Repair Ticket
+        document.getElementById('repairTicketForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var activeUser = JSON.parse(sessionStorage.getItem('ghaza_active_user'));
+
+            var ticket = {
+                ticketId: "REP-" + Math.floor(1000 + Math.random() * 9000),
+                phone: activeUser.phone,
+                device: document.getElementById('deviceModel').value.trim(),
+                serviceType: document.getElementById('serviceType').value,
+                description: document.getElementById('issueDesc').value.trim(),
+                estCost: "Pending Inspection",
+                status: "In Progress"
+            };
+
+            var repairs = JSON.parse(localStorage.getItem('ghaza_repairs') || '[]');
+            repairs.push(ticket);
+            localStorage.setItem('ghaza_repairs', JSON.stringify(repairs));
+
+            alert("Repair ticket created successfully! Ticket ID: " + ticket.ticketId);
+            document.getElementById('repairTicketForm').reset();
+            loadUserRepairs(activeUser.phone);
+        });
+
         function logoutUser() {
             sessionStorage.removeItem('ghaza_active_user');
             location.reload();
@@ -217,6 +313,7 @@
                 document.getElementById('dashUserName').innerText = activeUser.fullName;
 
                 loadUserOrders(activeUser.phone);
+                loadUserRepairs(activeUser.phone);
             }
         }
 
@@ -230,7 +327,7 @@
             });
 
             if (myOrders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="color: var(--text-muted); text-align:center;">No active or past orders found for your account.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="color: var(--text-muted); text-align:center;">No active or past orders found.</td></tr>';
                 return;
             }
 
@@ -240,7 +337,34 @@
                     <td><strong style="color:#60a5fa;">${item.orderId || 'N/A'}</strong></td>
                     <td>${item.product}</td>
                     <td>Rs. ${item.price}</td>
-                    <td><span style="color: var(--secondary); font-weight:bold;">${item.status || 'Processing'}</span></td>
+                    <td><span class="badge badge-success">${item.status || 'Processing'}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function loadUserRepairs(userPhone) {
+            var repairs = JSON.parse(localStorage.getItem('ghaza_repairs') || '[]');
+            var tbody = document.getElementById('userRepairsTable');
+            tbody.innerHTML = '';
+
+            var myRepairs = repairs.filter(function(r) {
+                return r.phone && r.phone.includes(userPhone);
+            });
+
+            if (myRepairs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="color: var(--text-muted); text-align:center;">No active repair tickets found.</td></tr>';
+                return;
+            }
+
+            myRepairs.forEach(function(item) {
+                var tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong style="color:#60a5fa;">${item.ticketId}</strong></td>
+                    <td><strong>${item.device}</strong><br><small style="color:var(--text-muted);">${item.description}</small></td>
+                    <td>${item.serviceType}</td>
+                    <td>${item.estCost}</td>
+                    <td><span class="badge badge-warning">${item.status}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
