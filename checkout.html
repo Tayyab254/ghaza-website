@@ -32,6 +32,19 @@
 
         .btn { padding: 0.8rem 1.6rem; border-radius: 6px; font-weight: bold; cursor: pointer; border: none; width: 100%; background: var(--primary); color: white; }
         .btn:hover { background: var(--primary-dark); }
+
+        /* WhatsApp Floating Widget Styles */
+        .wa-widget-btn { position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; background-color: #25d366; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); cursor: pointer; z-index: 9999; transition: transform 0.2s; }
+        .wa-widget-btn:hover { transform: scale(1.08); background-color: #20ba5a; }
+        .wa-chat-box { position: fixed; bottom: 95px; right: 25px; width: 320px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); display: none; flex-direction: column; overflow: hidden; z-index: 9999; }
+        .wa-chat-header { background: #075e54; color: white; padding: 1rem; display: flex; align-items: center; justify-content: space-between; }
+        .wa-chat-header-info h4 { margin: 0; font-size: 0.95rem; }
+        .wa-chat-header-info p { margin: 0; font-size: 0.75rem; color: #25d366; }
+        .wa-close-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; }
+        .wa-chat-body { padding: 1rem; display: flex; flex-direction: column; gap: 0.6rem; background: var(--dark-bg); }
+        .wa-chat-body p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.4rem; }
+        .wa-option-btn { background: var(--card-bg); color: var(--text-light); border: 1px solid var(--border); padding: 0.65rem 0.8rem; border-radius: 8px; text-align: left; font-size: 0.85rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+        .wa-option-btn:hover { background: var(--primary); border-color: var(--primary); color: white; }
     </style>
 </head>
 <body>
@@ -67,6 +80,25 @@
             </div>
             <button type="submit" class="btn">Confirm & Place Order</button>
         </form>
+    </div>
+
+    <!-- WhatsApp Floating Widget -->
+    <div class="wa-widget-btn" onclick="toggleWaChat()">💬</div>
+    <div class="wa-chat-box" id="waChatBox">
+        <div class="wa-chat-header">
+            <div class="wa-chat-header-info">
+                <h4>Gaza Laptops Support</h4>
+                <p>● Online | G-9 Markaz Islamabad</p>
+            </div>
+            <button class="wa-close-btn" onclick="toggleWaChat()">✕</button>
+        </div>
+        <div class="wa-chat-body">
+            <p>Select an option to chat on WhatsApp:</p>
+            <a class="wa-option-btn" onclick="sendWaMsg('General Inquiry')"><span>💬</span> Chat on WhatsApp</a>
+            <a class="wa-option-btn" onclick="sendWaMsg('Checkout / Payment Assistance')"><span>💳</span> Payment & Order Help</a>
+            <a class="wa-option-btn" onclick="sendWaMsg('Shop Stock & Pricing Inquiry')"><span>💻</span> Laptops & PC Stock Inquiry</a>
+            <a class="wa-option-btn" onclick="sendWaMsg('Track Order Inquiry')"><span>📦</span> Track My Order</a>
+        </div>
     </div>
 
     <script>
@@ -109,6 +141,22 @@
             alert("Order placed successfully! Your Order ID is: " + order.orderId);
             window.location.href = "account.html";
         });
+
+        /* WhatsApp Chat Widget Logic */
+        var shopWhatsAppPhone = "923350007575";
+
+        function toggleWaChat() {
+            var box = document.getElementById('waChatBox');
+            box.style.display = (box.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function sendWaMsg(optionType) {
+            var name = document.getElementById('custName') ? document.getElementById('custName').value.trim() : '';
+            var activeUser = JSON.parse(sessionStorage.getItem('ghaza_active_user') || '{}');
+            var userName = name || activeUser.fullName || 'Customer';
+            var text = "Hello Gaza Laptops!\nName: " + userName + "\nPage: Checkout Page\nOption Selected: " + optionType + "\n\nI need assistance with " + optionType + ".";
+            window.open("https://wa.me/" + shopWhatsAppPhone + "?text=" + encodeURIComponent(text), '_blank');
+        }
     </script>
 </body>
 </html>
