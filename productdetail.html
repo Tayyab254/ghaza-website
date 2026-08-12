@@ -81,6 +81,8 @@
     </div>
 
     <script>
+        var currentLoadedProduct = null;
+
         function getQueryParam(param) {
             var urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
@@ -89,11 +91,11 @@
         function loadProductDetails() {
             var prodId = getQueryParam('id');
             var stock = JSON.parse(localStorage.getItem('ghaza_stock') || '[]');
-            var product = stock.find(function(item) { return String(item.id) === String(prodId); });
+            currentLoadedProduct = stock.find(function(item) { return String(item.id) === String(prodId); });
 
             var container = document.getElementById('detailsContent');
 
-            if (!product) {
+            if (!currentLoadedProduct) {
                 container.innerHTML = `
                     <div style="grid-column: 1/-1; text-align: center; padding: 3rem 1rem;">
                         <h2>❌ Product Not Found</h2>
@@ -103,18 +105,18 @@
                 return;
             }
 
-            document.getElementById('breadTitle').textContent = product.title;
+            document.getElementById('breadTitle').textContent = currentLoadedProduct.title;
 
             // Handle Images
             var imagesList = [];
-            if (product.images && product.images.length > 0) {
-                imagesList = product.images;
-            } else if (product.image) {
-                imagesList = [product.image];
+            if (currentLoadedProduct.images && currentLoadedProduct.images.length > 0) {
+                imagesList = currentLoadedProduct.images;
+            } else if (currentLoadedProduct.image) {
+                imagesList = [currentLoadedProduct.image];
             }
 
             var mainImageHtml = imagesList.length > 0 
-                ? `<img id="mainImg" src="${imagesList[0]}" alt="${product.title}">`
+                ? `<img id="mainImg" src="${imagesList[0]}" alt="${currentLoadedProduct.title}">`
                 : `<div style="color: var(--text-muted);">🖼️ No Image Available</div>`;
 
             var thumbsHtml = '';
@@ -124,9 +126,9 @@
                 });
             }
 
-            var descriptionHtml = product.fullDescription 
-                ? product.fullDescription 
-                : (product.specs || 'No additional specifications listed for this product.');
+            var descriptionHtml = currentLoadedProduct.fullDescription 
+                ? currentLoadedProduct.fullDescription 
+                : (currentLoadedProduct.specs || 'No additional specifications listed for this product.');
 
             container.innerHTML = `
                 <div class="gallery-container">
@@ -140,20 +142,33 @@
 
                 <div class="info-container">
                     <div>
-                        <h1 class="product-title">${product.title}</h1>
-                        <p style="color: var(--text-muted); font-size: 0.95rem;">${product.specs || ''}</p>
-                        <div class="product-price">Rs. ${product.price}</div>
+                        <h1 class="product-title">${currentLoadedProduct.title}</h1>
+                        <p style="color: var(--text-muted); font-size: 0.95rem;">${currentLoadedProduct.specs || ''}</p>
+                        <div class="product-price">Rs. ${currentLoadedProduct.price}</div>
 
                         <div class="section-title">📋 Product Overview & Detailed Specs</div>
                         <div class="description-text">${descriptionHtml}</div>
                     </div>
 
                     <div class="action-box">
-                        <a href="checkout.html?prodId=${product.id}" class="btn btn-order">🛒 Order Now</a>
+                        <button onclick="saveAndProceedToCheckout()" class="btn btn-order">🛒 Order Now</button>
                         <a href="shop.html" class="btn btn-back">Continue Shopping</a>
                     </div>
                 </div>
             `;
+        }
+
+        function saveAndProceedToCheckout() {
+            if (currentLoadedProduct) {
+                // Save current selected product object dynamically
+                var checkoutData = {
+                    id: currentLoadedProduct.id,
+                    title: currentLoadedProduct.title,
+                    price: currentLoadedProduct.price
+                };
+                localStorage.setItem('ghaza_active_checkout', JSON.stringify(checkoutData));
+                window.location.href = 'checkout.html?prodId=' + currentLoadedProduct.id;
+            }
         }
 
         function changeMainImage(src, element) {
