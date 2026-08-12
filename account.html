@@ -39,9 +39,14 @@
         input, textarea, select { width: 100%; padding: 0.75rem; border-radius: 6px; background: #020617; border: 1px solid var(--border); color: white; }
         input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); }
 
+        .forgot-link { display: inline-block; margin-top: 0.4rem; color: #60a5fa; font-size: 0.85rem; text-decoration: none; cursor: pointer; }
+        .forgot-link:hover { text-decoration: underline; }
+
         .btn { padding: 0.75rem 1.4rem; border-radius: 6px; font-weight: bold; cursor: pointer; border: none; width: 100%; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary { background: transparent; color: var(--text-muted); border: 1px solid var(--border); margin-top: 0.5rem; }
+        .btn-secondary:hover { color: white; border-color: var(--text-muted); }
         .btn-danger { background: var(--required); color: white; width: auto; }
 
         .dashboard-container { max-width: 950px; margin: 3rem auto; padding: 2rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; display: none; }
@@ -69,9 +74,9 @@
         </div>
     </header>
 
-    <!-- AUTHENTICATION FORM (LOGIN / REGISTER) -->
+    <!-- AUTHENTICATION FORM (LOGIN / REGISTER / FORGOT PASSWORD) -->
     <div class="auth-container" id="authBox">
-        <div class="auth-tabs">
+        <div class="auth-tabs" id="authTabsHeader">
             <button class="tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">Login</button>
             <button class="tab-btn" id="tabRegisterBtn" onclick="switchAuthTab('register')">Register Account</button>
         </div>
@@ -85,6 +90,7 @@
             <div class="form-group">
                 <label for="loginPass">Password <span class="req-star">*</span></label>
                 <input type="password" id="loginPass" placeholder="Enter password" required>
+                <a class="forgot-link" onclick="switchAuthTab('forgot')">Forgot Password?</a>
             </div>
             <button type="submit" class="btn btn-primary">Sign In</button>
         </form>
@@ -113,12 +119,35 @@
                 <label for="regOtp">Verification Code (OTP) <span class="req-star">*</span></label>
                 <div style="display: flex; gap: 0.5rem;">
                     <input type="text" id="regOtp" placeholder="Enter 4-digit OTP" required>
-                    <button type="button" class="btn btn-primary" onclick="sendOtp()" style="width: 40%; font-size: 0.8rem;">Send OTP</button>
+                    <button type="button" class="btn btn-primary" onclick="sendOtp('regNotice')" style="width: 40%; font-size: 0.8rem;">Send OTP</button>
                 </div>
-                <small style="color: var(--secondary);" id="otpNotice"></small>
+                <small style="color: var(--secondary);" id="regNotice"></small>
             </div>
 
             <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+
+        <!-- FORGOT PASSWORD FORM -->
+        <form id="forgotForm" style="display: none;">
+            <h3 style="color: #60a5fa; margin-bottom: 1rem;">🔑 Reset Password</h3>
+            <div class="form-group">
+                <label for="resetEmail">Registered Email Address <span class="req-star">*</span></label>
+                <input type="email" id="resetEmail" placeholder="Enter your account email" required>
+            </div>
+            <div class="form-group">
+                <label for="resetOtp">Verification Code (OTP) <span class="req-star">*</span></label>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="text" id="resetOtp" placeholder="Enter 4-digit OTP" required>
+                    <button type="button" class="btn btn-primary" onclick="sendOtp('resetNotice')" style="width: 40%; font-size: 0.8rem;">Send OTP</button>
+                </div>
+                <small style="color: var(--secondary);" id="resetNotice"></small>
+            </div>
+            <div class="form-group">
+                <label for="newPass">New Password <span class="req-star">*</span></label>
+                <input type="password" id="newPass" placeholder="Enter new password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Reset & Save Password</button>
+            <button type="button" class="btn btn-secondary" onclick="switchAuthTab('login')">Back to Login</button>
         </form>
     </div>
 
@@ -201,16 +230,28 @@
         var generatedOtp = null;
 
         function switchAuthTab(tab) {
+            var tabsHeader = document.getElementById('authTabsHeader');
+            var loginForm = document.getElementById('loginForm');
+            var regForm = document.getElementById('registerForm');
+            var forgotForm = document.getElementById('forgotForm');
+
+            loginForm.style.display = 'none';
+            regForm.style.display = 'none';
+            forgotForm.style.display = 'none';
+
             if (tab === 'login') {
-                document.getElementById('loginForm').style.display = 'block';
-                document.getElementById('registerForm').style.display = 'none';
+                tabsHeader.style.display = 'flex';
+                loginForm.style.display = 'block';
                 document.getElementById('tabLoginBtn').classList.add('active');
                 document.getElementById('tabRegisterBtn').classList.remove('active');
-            } else {
-                document.getElementById('loginForm').style.display = 'none';
-                document.getElementById('registerForm').style.display = 'block';
+            } else if (tab === 'register') {
+                tabsHeader.style.display = 'flex';
+                regForm.style.display = 'block';
                 document.getElementById('tabRegisterBtn').classList.add('active');
                 document.getElementById('tabLoginBtn').classList.remove('active');
+            } else if (tab === 'forgot') {
+                tabsHeader.style.display = 'none';
+                forgotForm.style.display = 'block';
             }
         }
 
@@ -228,9 +269,11 @@
             }
         }
 
-        function sendOtp() {
+        function sendOtp(noticeId) {
             generatedOtp = Math.floor(1000 + Math.random() * 9000).toString();
-            document.getElementById('otpNotice').innerText = "Verification Code sent: " + generatedOtp;
+            if (noticeId) {
+                document.getElementById(noticeId).innerText = "Verification Code sent: " + generatedOtp;
+            }
             alert("Your demo OTP is: " + generatedOtp);
         }
 
@@ -273,6 +316,32 @@
                 checkSession();
             } else {
                 alert("Invalid Email or Password!");
+            }
+        });
+
+        // Forgot Password Submission
+        document.getElementById('forgotForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var email = document.getElementById('resetEmail').value.trim();
+            var otpEntered = document.getElementById('resetOtp').value.trim();
+            var newPassword = document.getElementById('newPass').value.trim();
+
+            if (generatedOtp && otpEntered !== generatedOtp) {
+                alert("Invalid OTP Code! Please enter the correct code.");
+                return;
+            }
+
+            var users = JSON.parse(localStorage.getItem('ghaza_users') || '[]');
+            var userIndex = users.findIndex(function(u) { return u.email === email; });
+
+            if (userIndex !== -1) {
+                users[userIndex].password = newPassword;
+                localStorage.setItem('ghaza_users', JSON.stringify(users));
+                alert("Password updated successfully! Please log in with your new password.");
+                document.getElementById('forgotForm').reset();
+                switchAuthTab('login');
+            } else {
+                alert("No account found registered with this email address.");
             }
         });
 
