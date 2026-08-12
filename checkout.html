@@ -36,10 +36,16 @@
         .form-group { margin-bottom: 1.2rem; text-align: left; }
         label { display: block; margin-bottom: 0.4rem; font-size: 0.88rem; color: #cbd5e1; }
         input, textarea, select { width: 100%; padding: 0.75rem; border-radius: 6px; background: #020617; border: 1px solid var(--border); color: white; }
+        
+        /* File input styling */
+        input[type="file"] { padding: 0.5rem; background: #0f172a; cursor: pointer; }
 
         /* Payment Details Box Styling */
         .bank-details-box { display: none; background: #0f172a; border: 1px dashed var(--primary); border-radius: 8px; padding: 1rem; margin-top: 0.8rem; font-size: 0.9rem; color: #cbd5e1; }
         .bank-details-box strong { color: #60a5fa; }
+        
+        /* Image Preview */
+        #proofPreview { max-width: 100%; max-height: 150px; margin-top: 10px; display: none; border-radius: 6px; border: 1px solid var(--border); }
 
         .btn { padding: 0.8rem 1.6rem; border-radius: 6px; font-weight: bold; cursor: pointer; border: none; width: 100%; background: var(--primary); color: white; }
         .btn:hover { background: var(--primary-dark); }
@@ -108,7 +114,12 @@
                     <p><strong>Account Title:</strong> usman siddique</p>
                     <p><strong>Account No:</strong> 03350007575</p>
                     <p><strong>IBAN:</strong> PK59TMFB0000000070987464</p>
-                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.4rem;">* Send payment receipt on WhatsApp for order confirmation.</p>
+                    
+                    <div style="margin-top: 1rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                        <label for="paymentProof" style="color: #60a5fa; font-weight: bold;">Upload Payment Proof (Receipt/Screenshot) <span class="req-star">*</span></label>
+                        <input type="file" id="paymentProof" accept="image/*" onchange="previewImage(event)">
+                        <img id="proofPreview" alt="Payment Proof Preview">
+                    </div>
                 </div>
             </div>
             <button type="submit" class="btn">Confirm & Place Order</button>
@@ -136,6 +147,7 @@
 
     <script>
         var activeCheckoutItem = null;
+        var paymentProofBase64 = null;
 
         // Enforce user authentication before allowing checkout
         window.onload = function() {
@@ -165,19 +177,49 @@
             }
         };
 
-        // Show or Hide Bank / EasyPaisa Details based on dropdown selection
+        // Show or Hide Bank / EasyPaisa Details and enforce file upload requirement
         function togglePaymentDetails() {
             var method = document.getElementById('payMethod').value;
             var detailsBox = document.getElementById('bankDetails');
+            var proofInput = document.getElementById('paymentProof');
+            
             if (method === 'Bank Transfer / EasyPaisa') {
                 detailsBox.style.display = 'block';
+                proofInput.required = true;
             } else {
                 detailsBox.style.display = 'none';
+                proofInput.required = false;
+                proofInput.value = ""; // Clear file input
+                document.getElementById('proofPreview').style.display = 'none';
+                paymentProofBase64 = null;
+            }
+        }
+
+        // Convert uploaded image to Base64 and show preview
+        function previewImage(event) {
+            var file = event.target.files[0];
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var preview = document.getElementById('proofPreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    paymentProofBase64 = e.target.result; // Store the base64 string
+                };
+                reader.readAsDataURL(file);
             }
         }
 
         document.getElementById('checkoutForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            var payMethodSelected = document.getElementById('payMethod').value;
+            
+            // Final validation for online payment proof
+            if (payMethodSelected === 'Bank Transfer / EasyPaisa' && !paymentProofBase64) {
+                alert("Please upload a screenshot or image of your payment receipt.");
+                return;
+            }
             
             // Dynamic price and product title fallback logic
             var itemTitle = activeCheckoutItem ? activeCheckoutItem.title : "Laptop / Computer Stock Item";
@@ -188,7 +230,8 @@
                 customerName: document.getElementById('custName').value.trim(),
                 phone: document.getElementById('custPhone').value.trim(),
                 address: document.getElementById('custAddress').value.trim(),
-                paymentMethod: document.getElementById('payMethod').value,
+                paymentMethod: payMethodSelected,
+                paymentProof: paymentProofBase64, // Saves the image string or null
                 product: itemTitle,
                 price: itemPrice,
                 status: "Pending",
