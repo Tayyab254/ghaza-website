@@ -190,9 +190,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="prodSpecs">Specifications / Description</label>
-                    <textarea id="prodSpecs" rows="2" placeholder="e.g. 16GB RAM, 512GB NVMe SSD, 14 inch FHD display" required></textarea>
+                    <label for="prodSpecs">Short Specs (Shown on Shop Cards)</label>
+                    <input type="text" id="prodSpecs" placeholder="e.g. Core i7 8th Gen / 16GB RAM / 512GB SSD" required>
                 </div>
+
+                <div class="form-group">
+                    <label for="prodFullDesc">Full Detailed Description (Shown on Product Details Page)</label>
+                    <textarea id="prodFullDesc" rows="4" placeholder="Enter full specifications, battery backup, screen condition, port details, warranty, etc."></textarea>
+                </div>
+
                 <button type="submit" class="btn btn-primary" style="width: auto;">Add Product Stock</button>
             </form>
 
@@ -309,6 +315,11 @@
     </div>
 
     <script>
+        // Default Password set to admin123
+        if (!localStorage.getItem('ghaza_admin_password')) {
+            localStorage.setItem('ghaza_admin_password', 'admin123');
+        }
+
         // Authentication Guard
         document.getElementById('adminAuthForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -457,13 +468,14 @@
                 category: document.getElementById('prodCategory').value,
                 price: document.getElementById('prodPrice').value.trim(),
                 specs: document.getElementById('prodSpecs').value.trim(),
+                fullDescription: document.getElementById('prodFullDesc').value.trim(),
                 images: imageBase64Array
             });
 
             localStorage.setItem('ghaza_stock', JSON.stringify(stock));
             document.getElementById('addProductForm').reset();
             loadProducts();
-            alert("Product with images added successfully!");
+            alert("Product with detailed specs and images added successfully!");
         });
 
         function deleteProduct(index) {
@@ -602,8 +614,15 @@
 
         document.getElementById('changePasswordForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            var currentPass = document.getElementById('currentPass').value;
+            var storedPass = localStorage.getItem('ghaza_admin_password') || 'admin123';
             var newPass = document.getElementById('newPass').value;
             var confirmPass = document.getElementById('confirmNewPass').value;
+
+            if (currentPass !== storedPass) {
+                alert("Current password is incorrect!");
+                return;
+            }
 
             if (newPass !== confirmPass) {
                 alert("New passwords do not match!");

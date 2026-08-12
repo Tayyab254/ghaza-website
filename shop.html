@@ -32,7 +32,22 @@
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.8rem; }
         
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
-        .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: flex-direction: column; justify-content: space-between; }
+        .product-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        .product-image-container {
+            width: 100%;
+            height: 200px;
+            background-color: #020617;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .product-image-container img { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .no-image-placeholder { color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 1rem; }
+
         .product-body { padding: 1.2rem; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
         .product-title { font-size: 1.1rem; color: #f8fafc; margin-bottom: 0.5rem; }
         .product-price { font-size: 1.2rem; color: var(--secondary); font-weight: bold; margin-bottom: 1rem; }
@@ -50,7 +65,7 @@
         label { display: block; margin-bottom: 0.4rem; font-size: 0.88rem; color: #cbd5e1; }
         input, select, textarea { width: 100%; padding: 0.75rem; border-radius: 6px; background: #020617; border: 1px solid var(--border); color: white; }
 
-        /* WhatsApp Floating Widget Styles */
+        /* WhatsApp Floating Widget */
         .wa-widget-btn { position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; background-color: #25d366; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); cursor: pointer; z-index: 9999; transition: transform 0.2s; }
         .wa-widget-btn:hover { transform: scale(1.08); background-color: #20ba5a; }
         .wa-chat-box { position: fixed; bottom: 95px; right: 25px; width: 320px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5); display: none; flex-direction: column; overflow: hidden; z-index: 9999; }
@@ -186,9 +201,21 @@
             }
 
             stock.forEach(function(item) {
+                var imageHtml = '';
+                if (item.images && item.images.length > 0) {
+                    imageHtml = `<img src="${item.images[0]}" alt="${item.title}">`;
+                } else if (item.image) {
+                    imageHtml = `<img src="${item.image}" alt="${item.title}">`;
+                } else {
+                    imageHtml = `<div class="no-image-placeholder">🖼️ No Image Available</div>`;
+                }
+
                 var card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
+                    <div class="product-image-container">
+                        ${imageHtml}
+                    </div>
                     <div class="product-body">
                         <div>
                             <h3 class="product-title">${item.title}</h3>
@@ -196,7 +223,7 @@
                         </div>
                         <div>
                             <div class="product-price">Rs. ${item.price}</div>
-                            <a href="checkout.html?prodId=${item.id}" class="btn btn-primary" style="display:block;">Buy Now</a>
+                            <a href="productdetail.html?id=${item.id}" class="btn btn-primary" style="display:block; text-align:center;">🔍 View Product Details</a>
                         </div>
                     </div>
                 `;
@@ -218,13 +245,11 @@
             }
 
             services.forEach(function(s) {
-                // Populate Dropdown
                 var opt = document.createElement('option');
                 opt.value = s.title;
                 opt.textContent = s.title;
                 select.appendChild(opt);
 
-                // Populate Card
                 var card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
@@ -293,7 +318,6 @@
             }
         });
 
-        /* WhatsApp Chat Widget Logic */
         var shopWhatsAppPhone = "923350007575";
 
         function toggleWaChat() {
